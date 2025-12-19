@@ -1,106 +1,119 @@
 "use client";
 
-import { StatsHeader } from "../components/StatsHeader";
-import { ProductTable } from "../components/ProductTable";
-import { ProductModal } from "../components/ProductModal";
-import { ConfirmModal } from "../components/ConfirmModal";
-import { useProducts, useProductModal } from "../hooks";
-import { FiPlus } from "react-icons/fi";
+import { useState, useEffect, useCallback } from "react";
+import { FiPlus, FiCheckCircle, FiClock, FiTrash2 } from "react-icons/fi";
+import { Tarea } from "../types/task";
+import { apiFetch } from "../lib/api";
+import { ENDPOINTS } from "../lib/config";
 
-export default function Home() {
-  const { 
-    products, 
-    loading, 
-    createProduct, 
-    updateProduct, 
-    deleteProduct,
-    isSubmitting 
-  } = useProducts();
+export default function TareasPage() {
+  const [tareas, setTareas] = useState<Tarea[]>([]);
+  const [nuevaTarea, setNuevaTarea] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const {
-    isProductModalOpen,
-    isConfirmModalOpen,
-    selectedProduct,
-    openProductModal,
-    closeProductModal,
-    openConfirmModal,
-    closeConfirmModal,
-  } = useProductModal();
+  const fetchTareas = useCallback(async () => {
+    try {
+      const resp = await apiFetch(ENDPOINTS.tareas);
+      if (resp.ok) {
+        const data = await resp.json();
+        setTareas(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const onFormSubmit = async (data: any) => {
-    const success = selectedProduct 
-      ? await updateProduct(data)
-      : await createProduct(data);
+  useEffect(() => {
+    fetchTareas();
+  }, [fetchTareas]);
+
+  const agregarTarea = async () => {
+    if (!nuevaTarea.trim()) return;
     
-    if (success) closeProductModal();
+    try {
+      const resp = await apiFetch(ENDPOINTS.tareas, {
+        method: "POST",
+        body: JSON.stringify({ titulo: nuevaTarea, estado: "Pendiente" })
+      });
+
+      if (resp.ok) {
+        setNuevaTarea("");
+        fetchTareas();
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
+  const eliminarTarea = async (id: number) => {
+    try {
+      const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
+        method: "DELETE"
+      });
+      if (resp.ok) fetchTareas();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (loading) return null; // El layout ya muestra un spinner central
+
   return (
-    <main className="min-h-screen bg-white text-black selection:bg-black selection:text-white">
-      <div className="max-w-4xl mx-auto py-12 md:py-24 px-4 sm:px-6">
-        
-        {/* Header Section */}
-        <StatsHeader totalProducts={products.length} />
+    <div className="p-8 max-w-4xl mx-auto animate-fade-in lg:mt-10">
+      <header className="mb-12">
+        <h1 className="text-4xl font-black text-black tracking-tight uppercase">IT TASKS</h1>
+        <p className="text-gray-400 font-medium tracking-tight">Centro de mando para tus tareas pendientes de TI.</p>
+      </header>
 
-        {/* Action Button */}
-        <div className="mb-8 flex justify-between items-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400">
-              Inventario Activo
-            </h2>
-          </div>
-          <button
-            onClick={() => openProductModal(null)}
-            className="flex items-center gap-2 bg-black text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-95 shadow-xl shadow-gray-200"
-          >
-            <FiPlus size={16} />
-            Nuevo
-          </button>
-        </div>
-
-        {/* Data Section */}
-        <div style={{ animationDelay: '0.2s' }} className="animate-fade-in">
-          <ProductTable
-            products={products}
-            isLoading={loading}
-            onEdit={openProductModal}
-            onDelete={openConfirmModal}
-          />
-        </div>
-
-        {/* Footer */}
-        <footer className="mt-20 py-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300">
-          <p>© 2025 SISTEMA DE GESTIÓN PRO</p>
-          <div className="flex gap-6">
-            <span className="hover:text-black transition-colors cursor-help">PRIVACIDAD</span>
-            <span className="hover:text-black transition-colors cursor-help">TÉRMINOS</span>
-          </div>
-        </footer>
+      {/* Input para nueva tarea */}
+      <div className="relative mb-8 group">
+        <input
+          type="text"
+          value={nuevaTarea}
+          onChange={(e) => setNuevaTarea(e.target.value)}
+          placeholder="¿Qué hay que hacer ahora?"
+          onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
+          className="w-full bg-white border-2 border-gray-100 rounded-2xl px-6 py-5 text-black font-bold focus:border-black transition-all outline-none shadow-sm placeholder:text-gray-200"
+        />
+        <button 
+          onClick={agregarTarea}
+          className="absolute right-3 top-3 bg-black text-white p-3 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg"
+        >
+          <FiPlus size={20} />
+        </button>
       </div>
 
-      {/* Modals */}
-      <ProductModal
-        isOpen={isProductModalOpen}
-        onClose={closeProductModal}
-        onSubmit={onFormSubmit}
-        product={selectedProduct}
-        isSubmitting={isSubmitting}
-      />
-
-      <ConfirmModal
-        isOpen={isConfirmModalOpen}
-        onClose={closeConfirmModal}
-        onConfirm={async () => {
-          if (selectedProduct) {
-            const success = await deleteProduct(selectedProduct.id);
-            if (success) closeConfirmModal();
-          }
-        }}
-        title="Eliminar Producto"
-        message={`¿Estás seguro de que deseas eliminar "${selectedProduct?.nombre}"? Esta acción no se puede deshacer.`}
-        isSubmitting={isSubmitting}
-      />
-    </main>
+      {/* Lista de Tareas */}
+      <div className="space-y-3">
+        {tareas.length === 0 ? (
+          <div className="text-center py-20 bg-gray-50 border-2 border-dashed border-gray-100 rounded-3xl">
+            <FiClock className="mx-auto text-3xl text-gray-200 mb-2" />
+            <p className="text-gray-400 font-bold uppercase text-xs tracking-widest">No hay tareas pendientes</p>
+          </div>
+        ) : (
+          tareas.map((t) => (
+            <div key={t.id} className="group flex items-center justify-between bg-white border border-gray-100 p-5 rounded-2xl hover:border-black transition-all shadow-sm">
+              <div className="flex items-center gap-4">
+                <button className="text-gray-100 hover:text-green-500 transition-colors">
+                  <FiCheckCircle size={28} />
+                </button>
+                <div className="flex flex-col">
+                  <span className="text-black font-black uppercase tracking-tight text-sm">{t.titulo}</span>
+                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pendiente</span>
+                </div>
+              </div>
+              <button 
+                onClick={() => t.id && eliminarTarea(t.id)}
+                className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 hover:text-red-500 transition-all"
+              >
+                <FiTrash2 size={20} />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
