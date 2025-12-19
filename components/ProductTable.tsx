@@ -33,7 +33,7 @@ export const ProductTable = ({ products, isLoading, onEdit, onDelete }: ProductT
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[500px]">
           <thead>
-            {/* Encabezado Negro Sólido */}
+            {/* Encabezado Negro de alto contraste */}
             <tr className="bg-black">
               <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-gray-400 font-black">ID</th>
               <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-white font-black">Producto</th>

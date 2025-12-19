@@ -63,10 +63,10 @@ export const ProductModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Overlay más suave */}
+      {/* Overlay suave */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       
-      {/* Modal */}
+      {/* Modal Blanco */}
       <div className="relative bg-white border border-gray-200 rounded-3xl w-full max-w-md overflow-hidden animate-fade-in shadow-2xl">
         {/* Header */}
         <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
@@ -113,7 +113,7 @@ export const ProductModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 rounded-xl border border-gray-100 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black hover:bg-gray-50 transition-all font-black"
+              className="flex-1 px-6 py-3 rounded-xl border border-gray-100 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black hover:bg-gray-50 transition-all"
             >
               CANCELAR
             </button>
