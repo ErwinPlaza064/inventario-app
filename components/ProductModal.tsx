@@ -63,18 +63,18 @@ export const ProductModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+      {/* Overlay más suave */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       
       {/* Modal */}
-      <div className="relative bg-card border border-border rounded-3xl w-full max-w-md overflow-hidden animate-fade-in shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+      <div className="relative bg-white border border-gray-200 rounded-3xl w-full max-w-md overflow-hidden animate-fade-in shadow-2xl">
         {/* Header */}
-        <div className="px-8 py-6 border-b border-border flex items-center justify-between">
-          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-white flex items-center gap-2">
+        <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-black flex items-center gap-2">
             {isEditing ? <FiEdit2 /> : <FiPlus />}
             {isEditing ? "Editar Producto" : "Nuevo Producto"}
           </h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+          <button onClick={onClose} className="text-gray-400 hover:text-black transition-colors">
             <FiX size={20} />
           </button>
         </div>
@@ -82,28 +82,28 @@ export const ProductModal = ({
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Nombre del Producto</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Nombre del Producto</label>
             <input
               type="text"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               placeholder="Ej: Mac Studio"
-              className="w-full bg-black border border-border text-white px-4 py-3 rounded-xl focus:border-white outline-none transition-all placeholder:text-gray-800"
+              className="w-full bg-white border border-gray-200 text-black px-4 py-3 rounded-xl focus:border-black outline-none transition-all placeholder:text-gray-300"
             />
             {errors.nombre && <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight">{errors.nombre}</p>}
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Precio (USD)</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Precio (USD)</label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
               <input
                 type="number"
                 step="0.01"
                 value={precio}
                 onChange={(e) => setPrecio(e.target.value)}
                 placeholder="0.00"
-                className="w-full bg-black border border-border text-white pl-8 pr-4 py-3 rounded-xl focus:border-white outline-none transition-all placeholder:text-gray-800"
+                className="w-full bg-white border border-gray-200 text-black pl-8 pr-4 py-3 rounded-xl focus:border-black outline-none transition-all placeholder:text-gray-300"
               />
             </div>
             {errors.precio && <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight">{errors.precio}</p>}
@@ -113,16 +113,16 @@ export const ProductModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 rounded-xl border border-border text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-all"
+              className="flex-1 px-6 py-3 rounded-xl border border-gray-100 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black hover:bg-gray-50 transition-all font-black"
             >
-              Cancelar
+              CANCELAR
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-white text-black px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 bg-black text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {isSubmitting ? "Guardando..." : <><FiCheck /> {isEditing ? "Actualizar" : "Crear"}</>}
+              {isSubmitting ? "GUARDANDO..." : <><FiCheck /> {isEditing ? "ACTUALIZAR" : "CREAR"}</>}
             </button>
           </div>
         </form>

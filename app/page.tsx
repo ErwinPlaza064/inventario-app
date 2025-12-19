@@ -36,7 +36,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+    <main className="min-h-screen bg-white text-black selection:bg-black selection:text-white">
       <div className="max-w-4xl mx-auto py-12 md:py-24 px-4 sm:px-6">
         
         {/* Header Section */}
@@ -45,14 +45,14 @@ export default function Home() {
         {/* Action Button */}
         <div className="mb-8 flex justify-between items-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center gap-2">
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-700">
+            <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
+            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400">
               Inventario Activo
             </h2>
           </div>
           <button
             onClick={() => openProductModal(null)}
-            className="flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+            className="flex items-center gap-2 bg-black text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-95 shadow-xl shadow-gray-200"
           >
             <FiPlus size={16} />
             Nuevo
@@ -70,11 +70,11 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-20 py-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-700">
+        <footer className="mt-20 py-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300">
           <p>© 2025 SISTEMA DE GESTIÓN PRO</p>
           <div className="flex gap-6">
-            <span className="hover:text-gray-400 cursor-help">PRIVACIDAD</span>
-            <span className="hover:text-gray-400 cursor-help">TÉRMINOS</span>
+            <span className="hover:text-black transition-colors cursor-help">PRIVACIDAD</span>
+            <span className="hover:text-black transition-colors cursor-help">TÉRMINOS</span>
           </div>
         </footer>
       </div>
