@@ -1,40 +1,30 @@
 interface StatsHeaderProps {
-  productCount: number;
+  totalProducts: number;
 }
 
-export default function StatsHeader({ productCount }: StatsHeaderProps) {
+export const StatsHeader = ({ totalProducts }: StatsHeaderProps) => {
   return (
-    <div className="text-center mb-8 animate-fade-in">
-      <div className="inline-block mb-3">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl px-5 py-2 border border-gray-300 shadow-sm">
-          <span className="text-gray-700 text-xs font-semibold tracking-wide uppercase">
-            Sistema de Gestión
-          </span>
-        </div>
+    <div className="mb-8 md:mb-12 text-center px-4 animate-fade-in">
+      <div className="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-[0.2em] uppercase border border-border bg-card text-accent/60 rounded-full">
+        Management System
       </div>
-      
-      <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-3 tracking-tight">
-        Inventario
+      <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-white">
+        Inventario<span className="text-accent/30">.</span>
       </h1>
-      
-      <p className="text-gray-600 mb-6 font-light">
-        Control y administración de productos
+      <p className="text-sm md:text-base text-gray-500 max-w-xs mx-auto mb-8 font-medium">
+        Control absoluto y elegante de tus productos.
       </p>
       
-      <div className="flex items-center justify-center gap-4">
-        <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-300 shadow-sm">
-          <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-          </svg>
-          <span className="font-bold text-gray-900 text-sm">{productCount}</span>
-          <span className="text-xs text-gray-600">Productos</span>
+      <div className="flex justify-center gap-4">
+        <div className="px-5 py-3 bg-card border border-border rounded-xl">
+          <span className="block text-2xl font-bold text-white leading-none">{totalProducts}</span>
+          <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Stock Total</span>
         </div>
-        
-        <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-300 shadow-sm">
-          <div className="w-1.5 h-1.5 bg-gray-900 rounded-full animate-pulse"></div>
-          <span className="text-xs text-gray-600">Sistema activo</span>
+        <div className="px-5 py-3 bg-card border border-border rounded-xl flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Online</span>
         </div>
       </div>
     </div>
   );
-}
+};

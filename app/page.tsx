@@ -1,108 +1,106 @@
 "use client";
 
-import { Product } from "@/types/product";
-import { useProducts, useProductModal } from "@/hooks";
-import StatsHeader from "@/components/StatsHeader";
-import ProductTable from "@/components/ProductTable";
-import ProductModal from "@/components/ProductModal";
-import ConfirmModal from "@/components/ConfirmModal";
+import { StatsHeader } from "../components/StatsHeader";
+import { ProductTable } from "../components/ProductTable";
+import { ProductModal } from "../components/ProductModal";
+import { ConfirmModal } from "../components/ConfirmModal";
+import { useProducts, useProductModal } from "../hooks";
+import { FiPlus } from "react-icons/fi";
 
 export default function Home() {
-  const { products, loading, isSubmitting, createProduct, updateProduct, deleteProduct } = useProducts();
   const { 
-    isProductModalOpen, 
-    openProductModal, 
+    products, 
+    loading, 
+    createProduct, 
+    updateProduct, 
+    deleteProduct,
+    isSubmitting 
+  } = useProducts();
+
+  const {
+    isProductModalOpen,
+    isConfirmModalOpen,
+    selectedProduct,
+    openProductModal,
     closeProductModal,
-    isConfirmModalOpen, 
-    openConfirmModal, 
+    openConfirmModal,
     closeConfirmModal,
-    selectedProduct 
   } = useProductModal();
 
-  const handleSave = async (productData: Omit<Product, "id"> | Product) => {
-    let success: boolean;
+  const onFormSubmit = async (data: any) => {
+    const success = selectedProduct 
+      ? await updateProduct(data)
+      : await createProduct(data);
     
-    if ("id" in productData) {
-      success = await updateProduct(productData as Product);
-    } else {
-      success = await createProduct(productData);
-    }
-
-    if (success) {
-      closeProductModal();
-    } else {
-      alert("Error al guardar el producto");
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!selectedProduct) return;
-    
-    const success = await deleteProduct(selectedProduct.id);
-    
-    if (success) {
-      closeConfirmModal();
-    } else {
-      alert("Error al eliminar el producto");
-    }
+    if (success) closeProductModal();
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 p-4 sm:p-8">
-      <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0iTTM2IDM0YzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMC0xMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6bTAtMTBjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00ek0xMiAzNGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6bTAtMTBjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00em0wLTEwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHpNMjQgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00em0wLTEwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-50 pointer-events-none" />
-      
-      <div className="relative max-w-4xl mx-auto">
-        <StatsHeader productCount={products.length} />
+    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+      <div className="max-w-4xl mx-auto py-12 md:py-24 px-4 sm:px-6">
+        
+        {/* Header Section */}
+        <StatsHeader totalProducts={products.length} />
 
-        <div className="mb-6 flex justify-end">
+        {/* Action Button */}
+        <div className="mb-8 flex justify-between items-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-1 bg-white rounded-full"></div>
+            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-700">
+              Inventario Activo
+            </h2>
+          </div>
           <button
-            onClick={() => openProductModal()}
-            className="flex items-center gap-2 px-5 py-3 bg-black text-white font-semibold rounded-xl hover:bg-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+            onClick={() => openProductModal(null)}
+            className="flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Nuevo Producto
+            <FiPlus size={16} />
+            Nuevo
           </button>
         </div>
 
-        <div className="animate-slide-up">
-          <ProductTable 
-            products={products} 
-            loading={loading}
+        {/* Data Section */}
+        <div style={{ animationDelay: '0.2s' }} className="animate-fade-in">
+          <ProductTable
+            products={products}
+            isLoading={loading}
             onEdit={openProductModal}
             onDelete={openConfirmModal}
           />
         </div>
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-500 text-xs font-light">
-            Sistema de inventario • CRUD completo
-          </p>
-        </div>
+        {/* Footer */}
+        <footer className="mt-20 py-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-700">
+          <p>© 2025 SISTEMA DE GESTIÓN PRO</p>
+          <div className="flex gap-6">
+            <span className="hover:text-gray-400 cursor-help">PRIVACIDAD</span>
+            <span className="hover:text-gray-400 cursor-help">TÉRMINOS</span>
+          </div>
+        </footer>
       </div>
 
-      {/* Product Modal (Create/Edit) */}
+      {/* Modals */}
       <ProductModal
         isOpen={isProductModalOpen}
         onClose={closeProductModal}
-        onSave={handleSave}
+        onSubmit={onFormSubmit}
         product={selectedProduct}
-        isLoading={isSubmitting}
+        isSubmitting={isSubmitting}
       />
 
-      {/* Confirm Delete Modal */}
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={closeConfirmModal}
-        onConfirm={handleDelete}
+        onConfirm={async () => {
+          if (selectedProduct) {
+            const success = await deleteProduct(selectedProduct.id);
+            if (success) closeConfirmModal();
+          }
+        }}
         title="Eliminar Producto"
-        message={`¿Estás seguro de eliminar "${selectedProduct?.nombre}"? Esta acción no se puede deshacer.`}
-        confirmText="Eliminar"
-        cancelText="Cancelar"
-        isLoading={isSubmitting}
-        variant="danger"
+        message={`¿Estás seguro de que deseas eliminar "${selectedProduct?.nombre}"? Esta acción no se puede deshacer.`}
+        isSubmitting={isSubmitting}
       />
-    </div>
+    </main>
   );
 }
