@@ -5,11 +5,13 @@ import { FiPlus, FiCheckCircle, FiClock, FiTrash2 } from "react-icons/fi";
 import { Tarea, TaskStatus } from "../types/task";
 import { apiFetch } from "../lib/api";
 import { ENDPOINTS } from "../lib/config";
+import { TaskModal } from "../components/TaskModal";
 
 export default function TareasPage() {
   const [tareas, setTareas] = useState<Tarea[]>([]);
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedTask, setSelectedTask] = useState<Tarea | null>(null);
 
   // Columnas del Kanban
   const COLUMNS = [
@@ -102,6 +104,42 @@ export default function TareasPage() {
     }
   };
 
+  // --- Task Updates ---
+  const handleSaveTask = async (id: number, updates: Partial<Tarea>) => {
+    // Optimistic Update
+    const previousTareas = [...tareas];
+    setTareas(tareas.map(t => t.id === id ? { ...t, ...updates } : t));
+
+    try {
+      const tarea = tareas.find(t => t.id === id);
+      if (!tarea) return;
+
+      const updatedTarea = { ...tarea, ...updates };
+
+      // Convert status string to enum int if necessary
+      let estadoEnum = typeof updatedTarea.estado === 'string' 
+         ? ["Pendiente", "EnProceso", "Completada"].indexOf(updatedTarea.estado as string)
+         : updatedTarea.estado;
+      
+      const payload = { ...updatedTarea, estado: estadoEnum };
+
+      const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload)
+      });
+
+      if (!resp.ok) {
+        setTareas(previousTareas); 
+        alert("Error al guardar cambios"); // Fallback simple
+      } else {
+        fetchTareas(); 
+      }
+    } catch (err) {
+      setTareas(previousTareas);
+      console.error(err);
+    }
+  };
+
   // --- HTML5 Drag and Drop Handlers ---
   const handleDragStart = (e: React.DragEvent, id: number) => {
     e.dataTransfer.setData("taskId", id.toString());
@@ -126,6 +164,7 @@ export default function TareasPage() {
       <header className="mb-6 lg:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">IT TASKS</h1>
+          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">Tablero Kanban</p>
         </div>
         <div className="flex gap-2 w-full lg:w-auto">
           <input
@@ -188,30 +227,40 @@ export default function TareasPage() {
                       key={t.id}
                       draggable
                       onDragStart={(e) => t.id && handleDragStart(e, t.id)}
-                      className="bg-white p-5 rounded-2xl border-2 border-transparent shadow-sm hover:shadow-lg hover:border-black cursor-grab active:cursor-grabbing transition-all group relative animate-scale-up"
+                      onClick={() => setSelectedTask(t)}
+                      className="bg-white p-5 rounded-2xl border-2 border-transparent shadow-sm hover:shadow-lg hover:border-black cursor-pointer active:scale-95 transition-all group relative animate-scale-up"
                     >
                       <p className="text-black font-bold text-sm mb-3 leading-snug">{t.titulo}</p>
                       
+                      {t.descripcion && (
+                         <div className="mb-3">
+                            <p className="text-xs text-gray-400 line-clamp-2">{t.descripcion}</p>
+                         </div>
+                      )}
+                      
                       <div className="flex justify-between items-center mt-2">
-                         <div className={`relative px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color} cursor-pointer group/badge transition-all hover:brightness-95`}>
+                         <div 
+                            className={`relative px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color} cursor-pointer group/badge transition-all hover:brightness-95`}
+                            onClick={(e) => e.stopPropagation()}
+                         >
                            {col.id}
                            {/* Mobile Dropdown Fallback */}
                            <select
-                              value={t.estado}
-                              onChange={(e) => updateEstado(t.id!, e.target.value as TaskStatus)}
-                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                               value={t.estado}
+                               onChange={(e) => updateEstado(t.id!, e.target.value as TaskStatus)}
+                               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                            >
                              <option value="Pendiente">Pendiente</option>
                              <option value="EnProceso">Por Hacer</option>
                              <option value="Completada">Resuelto</option>
                            </select>
                          </div>
-                         <button 
-                            onClick={() => t.id && eliminarTarea(t.id)}
-                            className="text-gray-200 hover:text-red-500 transition-colors p-1"
-                          >
-                            <FiTrash2 size={16} />
-                          </button>
+                         <div className="flex items-center gap-2">
+                            <div className="text-[10px] font-bold text-gray-300 flex items-center gap-1">
+                                <FiClock size={12} />
+                                <span>{new Date(t.fechaCreacion).toLocaleDateString()}</span>
+                            </div>
+                         </div>
                       </div>
                     </div>
                   ))}
@@ -220,6 +269,19 @@ export default function TareasPage() {
           ))}
         </div>
       </div>
+
+      {selectedTask && (
+        <TaskModal 
+          task={selectedTask}
+          isOpen={!!selectedTask}
+          onClose={() => setSelectedTask(null)}
+          onSave={handleSaveTask}
+          onDelete={async (id) => {
+             await eliminarTarea(id);
+             setSelectedTask(null);
+          }}
+        />
+      )}
     </div>
   );
 }
