@@ -84,7 +84,7 @@ export default function NotasPage() {
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="w-full lg:w-auto bg-black text-white px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200"
+          className="w-full lg:w-auto bg-black text-white px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200 relative z-10"
         >
           <FiPlus /> NUEVA NOTA
         </button>
