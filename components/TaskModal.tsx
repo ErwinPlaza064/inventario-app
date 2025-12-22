@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { FiX, FiTrash2, FiSave, FiClock, FiAlignLeft } from "react-icons/fi";
 import { Tarea, TaskStatus } from "../types/task";
 
@@ -24,8 +25,6 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
     setEstado(task.estado);
   }, [task]);
 
-  if (!isOpen) return null;
-
   const handleSave = async () => {
     setLoading(true);
     await onSave(task.id!, { titulo, descripcion, estado });
@@ -42,10 +41,9 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
     }
   };
 
-  return (
+  const modalContent = (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 lg:p-6 animate-fade-in">
       <div className="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl relative animate-scale-up flex flex-col max-h-[90vh]">
-        
         {/* Header */}
         <div className="flex justify-between items-start p-8 border-b border-gray-100">
            <div className="flex-1 mr-8">
@@ -138,4 +136,7 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
       </div>
     </div>
   );
+
+  return isOpen && typeof document !== "undefined" ? createPortal(modalContent, document.body) : null;
 };
+
