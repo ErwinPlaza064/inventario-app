@@ -81,41 +81,41 @@ export default function NotasPage() {
     <div className="px-4 pt-24 pb-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10">
       <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-8 lg:mb-12 gap-6">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">NOTAS IT</h1>
+          <h1 className="text-3xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">NOTAS IT</h1>
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="w-full lg:w-auto bg-black text-white px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200 relative z-10"
+          className="w-full lg:w-auto bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200 relative z-10"
         >
           <FiPlus /> NUEVA NOTA
         </button>
       </header>
 
       {notas.length === 0 ? (
-        <div className="text-center py-24 bg-gray-50 border-2 border-dashed border-gray-100 rounded-[40px]">
-          <FiClock className="mx-auto text-4xl text-gray-200 mb-4" />
-          <p className="text-gray-400 font-bold uppercase text-xs tracking-widest">No hay notas guardadas</p>
+        <div className="text-center py-24 bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-[40px]">
+          <FiClock className="mx-auto text-4xl text-gray-200 dark:text-gray-700 mb-4" />
+          <p className="text-gray-400 dark:text-gray-500 font-bold uppercase text-xs tracking-widest">No hay notas guardadas</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {notas.map((nota) => (
-            <div key={nota.id} className="bg-white border-2 border-gray-100 p-8 rounded-[32px] hover:border-black transition-all group flex flex-col h-full shadow-sm hover:shadow-xl hover:shadow-gray-100">
+            <div key={nota.id} className="bg-white dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-800 p-8 rounded-[32px] hover:border-black dark:hover:border-white transition-all group flex flex-col h-full shadow-sm dark:shadow-none hover:shadow-xl hover:shadow-gray-100 dark:hover:shadow-none">
               <div className="flex justify-between items-start mb-6">
-                <div className="p-4 bg-gray-50 rounded-2xl text-black group-hover:bg-black group-hover:text-white transition-all transform group-hover:rotate-6">
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl text-black dark:text-white group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all transform group-hover:rotate-6">
                   <FiFileText size={24} />
                 </div>
                 <button 
                   onClick={() => eliminarNota(nota.id)}
-                  className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 hover:text-red-500 transition-all"
+                  className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 dark:text-gray-600 hover:text-red-500 transition-all"
                 >
                   <FiTrash2 size={20} />
                 </button>
               </div>
-              <h3 className="text-xl font-black text-black uppercase mb-3 tracking-tight">{nota.titulo}</h3>
-              <p className="text-gray-500 text-sm font-bold leading-relaxed flex-1 whitespace-pre-wrap">{nota.contenido}</p>
-              <div className="mt-8 pt-6 border-t border-gray-50 flex justify-between items-center text-[10px] font-black text-gray-200 uppercase tracking-[0.2em]">
+              <h3 className="text-xl font-black text-black dark:text-white uppercase mb-3 tracking-tight">{nota.titulo}</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm font-bold leading-relaxed flex-1 whitespace-pre-wrap">{nota.contenido}</p>
+              <div className="mt-8 pt-6 border-t border-gray-50 dark:border-gray-800 flex justify-between items-center text-[10px] font-black text-gray-200 dark:text-gray-600 uppercase tracking-[0.2em]">
                 <span>#{nota.id}</span>
-                <span className="text-gray-300 group-hover:text-black transition-colors underline decoration-black/10">IT SUITE</span>
+                <span className="text-gray-300 dark:text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors underline decoration-black/10 dark:decoration-white/10">IT SUITE</span>
               </div>
             </div>
           ))}
@@ -124,9 +124,9 @@ export default function NotasPage() {
 
       {/* Modal Nueva Nota */}
       {showModal && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-start sm:items-center justify-center pt-20 sm:pt-0 p-4 sm:p-6 animate-fade-in overflow-y-auto">
-          <div className="bg-white w-full max-w-lg rounded-[40px] p-6 sm:p-10 shadow-2xl relative animate-scale-up">
-            <h2 className="text-3xl font-black text-black mb-8 uppercase tracking-tighter">Nueva Nota IT</h2>
+        <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start sm:items-center justify-center pt-20 sm:pt-0 p-4 sm:p-6 animate-fade-in overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-[40px] p-6 sm:p-10 shadow-2xl dark:shadow-none relative animate-scale-up">
+            <h2 className="text-3xl font-black text-black dark:text-white mb-8 uppercase tracking-tighter">Nueva Nota IT</h2>
             <div className="space-y-4">
               <input
                 type="text"
@@ -136,10 +136,10 @@ export default function NotasPage() {
                   setNuevaNota({...nuevaNota, titulo: e.target.value});
                   if (error) setError(false);
                 }}
-                className={`w-full bg-gray-50 border-2 rounded-2xl py-4 px-6 text-black font-bold outline-none transition-all ${
+                className={`w-full bg-gray-50 dark:bg-gray-800 border-2 rounded-2xl py-4 px-6 text-black dark:text-white font-bold outline-none transition-all ${
                   error && !nuevaNota.titulo 
                     ? "border-red-500 placeholder:text-red-400 animate-shake" 
-                    : "border-gray-100 focus:bg-white focus:border-black"
+                    : "border-gray-100 dark:border-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:border-black dark:focus:border-white"
                 }`}
               />
               <textarea
@@ -150,22 +150,22 @@ export default function NotasPage() {
                   setNuevaNota({...nuevaNota, contenido: e.target.value});
                   if (error) setError(false);
                 }}
-                className={`w-full bg-gray-50 border-2 rounded-2xl py-4 px-6 text-black font-bold outline-none resize-none transition-all ${
+                className={`w-full bg-gray-50 dark:bg-gray-800 border-2 rounded-2xl py-4 px-6 text-black dark:text-white font-bold outline-none resize-none transition-all ${
                   error && !nuevaNota.contenido 
                     ? "border-red-500 placeholder:text-red-400 animate-shake" 
-                    : "border-gray-100 focus:bg-white focus:border-black"
+                    : "border-gray-100 dark:border-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:border-black dark:focus:border-white"
                 }`}
               />
               <div className="flex gap-4 pt-4">
                 <button 
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-4 text-gray-400 font-bold hover:text-black transition-colors"
+                  className="flex-1 py-4 text-gray-400 dark:text-gray-500 font-bold hover:text-black dark:hover:text-white transition-colors"
                 >
                   CANCELAR
                 </button>
                 <button 
                   onClick={guardarNota}
-                  className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200"
+                  className="flex-1 bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200"
                 >
                   GUARDAR NOTA
                 </button>
