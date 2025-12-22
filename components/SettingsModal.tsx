@@ -54,8 +54,8 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-6 animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-[40px] p-8 shadow-2xl relative animate-scale-up">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-fade-in overflow-y-auto">
+      <div className="bg-white w-full max-w-md rounded-[40px] p-6 sm:p-8 shadow-2xl relative animate-scale-up my-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>

@@ -42,8 +42,8 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
   };
 
   const modalContent = (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 lg:p-6 animate-fade-in">
-      <div className="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl relative animate-scale-up flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-fade-in overflow-y-auto">
+      <div className="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl relative animate-scale-up flex flex-col max-h-[90vh] my-auto">
         {/* Header */}
         <div className="flex justify-between items-start p-8 border-b border-gray-100">
            <div className="flex-1 mr-8">

@@ -32,12 +32,12 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       {/* Overlay para móvil */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden"
           onClick={onClose}
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-screen w-64 bg-black border-r border-white/10 flex flex-col p-6 z-50 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-black border-r border-white/10 flex flex-col p-6 z-40 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
         <div className="mb-12 px-2 flex justify-between items-center">
