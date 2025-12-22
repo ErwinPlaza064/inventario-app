@@ -58,7 +58,7 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
               />
               <div className="flex items-center gap-2 mt-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-widest">
                 <FiClock />
-                <span>Creada el {new Date(task.fechaCreacion).toLocaleDateString()}</span>
+                <span>Creada el {new Date(task.fechaCreacion || Date.now()).toLocaleDateString()}</span>
               </div>
            </div>
            
