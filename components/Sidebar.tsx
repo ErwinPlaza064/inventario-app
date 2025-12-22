@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiBox, FiCheckSquare, FiFileText, FiLogOut, FiSettings, FiLock } from "react-icons/fi";
+import { FiBox, FiCheckSquare, FiFileText, FiLogOut, FiSettings, FiLock, FiSun, FiMoon } from "react-icons/fi";
 import { useState } from "react";
 import { SettingsModal } from "./SettingsModal";
 
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 const menuItems = [
   { name: "Tareas IT", icon: FiCheckSquare, path: "/" },
@@ -22,6 +23,7 @@ interface SidebarProps {
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const pathname = usePathname();
   const { logout, username } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [showSettings, setShowSettings] = useState(false);
 
   return (
@@ -37,20 +39,30 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-screen w-64 bg-black border-r border-white/10 flex flex-col p-6 z-40 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-black dark:bg-[#0a0a0a] border-r border-white/10 dark:border-white/5 flex flex-col p-6 z-40 transition-all duration-300 ease-in-out lg:translate-x-0 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
-        <div className="mb-12 px-2 flex justify-between items-center">
+        <div className="mb-8 px-2 flex justify-between items-center">
           <div>
             <h1 className="text-xl font-black tracking-tighter text-white">
               IT SUITE<span className="text-gray-500">.</span>
             </h1>
             <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Management Pro</p>
           </div>
-          {/* Botón cerrar para móvil */}
-          <button onClick={onClose} className="lg:hidden text-white p-2">
-            <FiLogOut className="rotate-180" size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle */}
+            <button 
+              onClick={toggleTheme}
+              className="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-xl transition-all"
+              title={theme === "light" ? "Modo Oscuro" : "Modo Claro"}
+            >
+              {theme === "light" ? <FiMoon size={18} /> : <FiSun size={18} />}
+            </button>
+            {/* Botón cerrar para móvil */}
+            <button onClick={onClose} className="lg:hidden text-white p-2">
+              <FiLogOut className="rotate-180" size={20} />
+            </button>
+          </div>
         </div>
 
         {username && (

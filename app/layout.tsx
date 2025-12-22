@@ -3,6 +3,7 @@
 import "./globals.css";
 import { Sidebar } from "../components/Sidebar";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { ThemeProvider } from "../context/ThemeContext";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
@@ -27,19 +28,19 @@ function RootContent({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-white">
-        <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black">
+        <div className="w-12 h-12 border-4 border-black dark:border-white border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-white dark:bg-black">
       {/* Botón Hamburguesa para Móvil */}
       {!isAuthPage && isAuthenticated && (
         <button 
           onClick={() => setIsSidebarOpen(true)}
-          className="lg:hidden fixed top-6 left-6 z-30 bg-black text-white p-3 rounded-2xl shadow-xl shadow-black/10 active:scale-90 transition-transform"
+          className="lg:hidden fixed top-6 left-6 z-30 bg-black dark:bg-white text-white dark:text-black p-3 rounded-2xl shadow-xl shadow-black/10 dark:shadow-white/10 active:scale-90 transition-transform"
         >
           <FiMenu size={24} />
         </button>
@@ -67,12 +68,14 @@ export default function RootLayout({
       <head>
         <title>IT SUITE - Management Pro</title>
       </head>
-      <body className="antialiased bg-white">
-        <AuthProvider>
-          <RootContent>
-            {children}
-          </RootContent>
-        </AuthProvider>
+      <body className="antialiased bg-white dark:bg-black">
+        <ThemeProvider>
+          <AuthProvider>
+            <RootContent>
+              {children}
+            </RootContent>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

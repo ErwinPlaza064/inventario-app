@@ -46,14 +46,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-6">
       <div className="w-full max-w-md animate-fade-in">
         <div className="mb-10">
-          <Link href="/login" className="flex items-center gap-2 text-gray-400 hover:text-black font-bold text-sm mb-6 transition-colors group">
+          <Link href="/login" className="flex items-center gap-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white font-bold text-sm mb-6 transition-colors group">
             <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" /> Volver al Login
           </Link>
-          <h1 className="text-4xl font-black text-black tracking-tighter mb-2">CREAR CUENTA</h1>
-          <p className="text-gray-400 font-medium">Únete a la IT Suite para colaborar.</p>
+          <h1 className="text-4xl font-black text-black dark:text-white tracking-tighter mb-2">CREAR CUENTA</h1>
+          <p className="text-gray-400 dark:text-gray-500 font-medium">Únete a la IT Suite para colaborar.</p>
         </div>
 
         {error && (
@@ -80,10 +80,10 @@ export default function RegisterPage() {
                 if (error) setError("");
               }}
               disabled={isSubmitting || success}
-              className={`w-full bg-gray-50 border-2 rounded-2xl py-4 pl-12 pr-4 text-black font-bold outline-none transition-all ${
+              className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-bold outline-none transition-all ${
                 error && !username 
                   ? "border-red-500 placeholder:text-red-400 animate-shake" 
-                  : "border-gray-100 focus:bg-white focus:border-black"
+                  : "border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white"
               }`}
             />
           </div>
@@ -99,10 +99,10 @@ export default function RegisterPage() {
                 if (error) setError("");
               }}
               disabled={isSubmitting || success}
-              className={`w-full bg-gray-50 border-2 rounded-2xl py-4 pl-12 pr-4 text-black font-bold outline-none transition-all ${
+              className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-bold outline-none transition-all ${
                 error && !password 
                   ? "border-red-500 placeholder:text-red-400 animate-shake" 
-                  : "border-gray-100 focus:bg-white focus:border-black"
+                  : "border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white"
               }`}
             />
           </div>
@@ -110,9 +110,9 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting || success}
-            className="w-full bg-black text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-gray-200 disabled:bg-gray-200"
+            className="w-full bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-gray-200 dark:shadow-gray-800 disabled:bg-gray-200 dark:disabled:bg-gray-700"
           >
-            {isSubmitting ? "REGISTRANDO..." : "REGISTRARMEHORA"}
+            {isSubmitting ? "REGISTRANDO..." : "REGISTRARME AHORA"}
             {!isSubmitting && <FiUserPlus />}
           </button>
         </form>

@@ -177,10 +177,10 @@ export default function TareasPage() {
     <div className="px-4 pt-24 pb-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10 h-dvh flex flex-col">
       <header className="mb-6 lg:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">
+          <h1 className="text-3xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">
             IT TASKS
           </h1>
-          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">
+          <p className="text-gray-400 dark:text-gray-500 font-medium tracking-tight text-sm lg:text-base">
             Tablero Kanban
           </p>
         </div>
@@ -194,15 +194,15 @@ export default function TareasPage() {
             }}
             placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
             onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
-            className={`bg-gray-50 border-2 rounded-xl px-4 py-3 text-black font-bold outline-none flex-1 lg:w-64 transition-all ${
+            className={`bg-gray-50 dark:bg-gray-900 border-2 rounded-xl px-4 py-3 text-black dark:text-white font-bold outline-none flex-1 lg:w-64 transition-all ${
               error
                 ? "border-red-500 placeholder:text-red-400 animate-shake"
-                : "border-gray-100 focus:border-black"
+                : "border-gray-100 dark:border-gray-800 focus:border-black dark:focus:border-white"
             }`}
           />
           <button
             onClick={agregarTarea}
-            className="bg-black text-white p-4 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shrink-0"
+            className="bg-black dark:bg-white text-white dark:text-black p-4 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shrink-0"
           >
             <FiPlus size={20} />
           </button>
@@ -215,12 +215,12 @@ export default function TareasPage() {
           {COLUMNS.map((col) => (
             <div
               key={col.id}
-              className="flex-1 bg-gray-50/50 border-2 border-dashed border-gray-200 rounded-[32px] flex flex-col h-auto lg:h-full lg:max-h-[calc(100vh-200px)] shrink-0"
+              className="flex-1 bg-gray-50/50 dark:bg-gray-900/50 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-[32px] flex flex-col h-auto lg:h-full lg:max-h-[calc(100vh-200px)] shrink-0"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, col.id)}
             >
               {/* Column Header */}
-              <div className="p-6 pb-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-[30px]">
+              <div className="p-6 pb-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-white dark:bg-black rounded-t-[30px]">
                 <h2 className="font-black text-sm tracking-widest uppercase text-gray-400 flex items-center gap-2">
                   <div
                     className={`w-3 h-3 rounded-full ${col.color
@@ -230,7 +230,7 @@ export default function TareasPage() {
                   />
                   {col.label}
                 </h2>
-                <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-[10px] font-bold">
+                <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-3 py-1 rounded-full text-[10px] font-bold">
                   {tareas.filter((t) => t.estado === col.id).length}
                 </span>
               </div>
@@ -253,9 +253,9 @@ export default function TareasPage() {
                       draggable
                       onDragStart={(e) => t.id && handleDragStart(e, t.id)}
                       onClick={() => setSelectedTask(t)}
-                      className="bg-white p-5 rounded-2xl border-2 border-transparent shadow-sm hover:shadow-lg hover:border-black cursor-pointer active:scale-95 transition-all group relative animate-scale-up"
+                      className="bg-white dark:bg-gray-900 p-5 rounded-2xl border-2 border-transparent shadow-sm hover:shadow-lg hover:border-black dark:hover:border-white cursor-pointer active:scale-95 transition-all group relative animate-scale-up"
                     >
-                      <p className="text-black font-bold text-sm mb-3 leading-snug">
+                      <p className="text-black dark:text-white font-bold text-sm mb-3 leading-snug">
                         {t.titulo}
                       </p>
 

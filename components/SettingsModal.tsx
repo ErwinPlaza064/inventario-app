@@ -55,12 +55,12 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-fade-in overflow-y-auto">
-      <div className="bg-white w-full max-w-md rounded-[40px] p-6 sm:p-8 shadow-2xl relative animate-scale-up my-auto">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-[40px] p-6 sm:p-8 shadow-2xl relative animate-scale-up my-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-2xl font-black text-black uppercase tracking-tighter">Mi Perfil</h2>
-            <p className="text-gray-400 text-sm font-bold">Personaliza tu cuenta</p>
+            <h2 className="text-2xl font-black text-black dark:text-white uppercase tracking-tighter">Mi Perfil</h2>
+            <p className="text-gray-400 dark:text-gray-500 text-sm font-bold">Personaliza tu cuenta</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
             <FiX size={24} />
@@ -77,7 +77,7 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 pl-12 pr-4 text-black font-bold outline-none focus:border-black transition-all"
+                className="w-full bg-gray-50 dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-bold outline-none focus:border-black dark:focus:border-white transition-all"
                 placeholder="Tu nombre..."
               />
             </div>
@@ -91,7 +91,7 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 pl-12 pr-4 text-black font-bold outline-none focus:border-black transition-all"
+                className="w-full bg-gray-50 dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-bold outline-none focus:border-black dark:focus:border-white transition-all"
                 placeholder="********"
               />
             </div>
@@ -112,7 +112,7 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-black text-white font-black py-4 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:scale-100"
+            className="w-full bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200 dark:shadow-gray-700 flex justify-center items-center gap-2 disabled:opacity-50 disabled:scale-100"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
