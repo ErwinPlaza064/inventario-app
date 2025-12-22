@@ -43,7 +43,7 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 lg:p-6 animate-fade-in">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 lg:p-6 animate-fade-in">
       <div className="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl relative animate-scale-up flex flex-col max-h-[90vh]">
         
         {/* Header */}

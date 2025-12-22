@@ -123,7 +123,7 @@ export default function NotasPage() {
 
       {/* Modal Nueva Nota */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-fade-in">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-6 animate-fade-in">
           <div className="bg-white w-full max-w-lg rounded-[40px] p-10 shadow-2xl relative animate-scale-up">
             <h2 className="text-3xl font-black text-black mb-8 uppercase tracking-tighter">Nueva Nota IT</h2>
             <div className="space-y-4">
