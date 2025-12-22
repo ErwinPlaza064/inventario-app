@@ -33,7 +33,7 @@ export const SettingsModal = ({ onClose }: SettingsModalProps) => {
       }
 
       const resp = await apiFetch("/auth/profile", {
-        method: "PUT",
+        method: "POST",
         body: JSON.stringify(body)
       });
 
