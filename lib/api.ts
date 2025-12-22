@@ -1,4 +1,6 @@
-export async function apiFetch(url: string, options: RequestInit = {}) {
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://inventario-app-production.up.railway.app/api';
+
+export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   const token = typeof window !== 'undefined' ? localStorage.getItem('it_suite_token') : null;
 
   const headers = {
@@ -6,6 +8,10 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...options.headers,
   };
+
+  // Ensure clean URL construction
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${API_URL}${cleanEndpoint}`;
 
   const response = await fetch(url, { ...options, headers });
 
