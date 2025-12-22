@@ -36,8 +36,18 @@ export default function NotasPage() {
     fetchNotas();
   }, [fetchNotas]);
 
+  const [error, setError] = useState(false);
+
+  // ... (existing code)
+
   const guardarNota = async () => {
-    if (!nuevaNota.titulo || !nuevaNota.contenido) return;
+    if (!nuevaNota.titulo.trim() || !nuevaNota.contenido.trim()) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    
+    // ... (existing code)
     try {
       const resp = await apiFetch(ENDPOINTS.notas, {
         method: "POST",
@@ -120,17 +130,31 @@ export default function NotasPage() {
             <div className="space-y-4">
               <input
                 type="text"
-                placeholder="Título (ej: Config Servidor)"
+                placeholder={error && !nuevaNota.titulo ? "¡El título es obligatorio!" : "Título (ej: Config Servidor)"}
                 value={nuevaNota.titulo}
-                onChange={(e) => setNuevaNota({...nuevaNota, titulo: e.target.value})}
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 px-6 text-black font-bold focus:bg-white focus:border-black transition-all outline-none"
+                onChange={(e) => {
+                  setNuevaNota({...nuevaNota, titulo: e.target.value});
+                  if (error) setError(false);
+                }}
+                className={`w-full bg-gray-50 border-2 rounded-2xl py-4 px-6 text-black font-bold outline-none transition-all ${
+                  error && !nuevaNota.titulo 
+                    ? "border-red-500 placeholder:text-red-400 animate-shake" 
+                    : "border-gray-100 focus:bg-white focus:border-black"
+                }`}
               />
               <textarea
-                placeholder="Contenido de la nota..."
+                placeholder={error && !nuevaNota.contenido ? "¡La nota no puede estar vacía!" : "Contenido de la nota..."}
                 value={nuevaNota.contenido}
                 rows={5}
-                onChange={(e) => setNuevaNota({...nuevaNota, contenido: e.target.value})}
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 px-6 text-black font-bold focus:bg-white focus:border-black transition-all outline-none resize-none"
+                onChange={(e) => {
+                  setNuevaNota({...nuevaNota, contenido: e.target.value});
+                  if (error) setError(false);
+                }}
+                className={`w-full bg-gray-50 border-2 rounded-2xl py-4 px-6 text-black font-bold outline-none resize-none transition-all ${
+                  error && !nuevaNota.contenido 
+                    ? "border-red-500 placeholder:text-red-400 animate-shake" 
+                    : "border-gray-100 focus:bg-white focus:border-black"
+                }`}
               />
               <div className="flex gap-4 pt-4">
                 <button 

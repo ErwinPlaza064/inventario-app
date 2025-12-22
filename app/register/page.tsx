@@ -16,7 +16,10 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !password) return;
+    if (!username || !password) {
+      setError("Por favor completa todos los campos.");
+      return;
+    }
 
     setIsSubmitting(true);
     setError("");
@@ -67,26 +70,40 @@ export default function RegisterPage() {
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div className="relative group">
-            <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-black transition-colors" />
+            <FiUser className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${error && !username ? "text-red-400" : "text-gray-300 group-focus-within:text-black"}`} />
             <input
               type="text"
               placeholder="Nombre de Usuario"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                if (error) setError("");
+              }}
               disabled={isSubmitting || success}
-              className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 pl-12 pr-4 text-black font-bold focus:bg-white focus:border-black transition-all outline-none"
+              className={`w-full bg-gray-50 border-2 rounded-2xl py-4 pl-12 pr-4 text-black font-bold outline-none transition-all ${
+                error && !username 
+                  ? "border-red-500 placeholder:text-red-400 animate-shake" 
+                  : "border-gray-100 focus:bg-white focus:border-black"
+              }`}
             />
           </div>
 
           <div className="relative group">
-            <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-black transition-colors" />
+            <FiLock className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${error && !password ? "text-red-400" : "text-gray-300 group-focus-within:text-black"}`} />
             <input
               type="password"
               placeholder="Contraseña Segura"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError("");
+              }}
               disabled={isSubmitting || success}
-              className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 pl-12 pr-4 text-black font-bold focus:bg-white focus:border-black transition-all outline-none"
+              className={`w-full bg-gray-50 border-2 rounded-2xl py-4 pl-12 pr-4 text-black font-bold outline-none transition-all ${
+                error && !password 
+                  ? "border-red-500 placeholder:text-red-400 animate-shake" 
+                  : "border-gray-100 focus:bg-white focus:border-black"
+              }`}
             />
           </div>
 

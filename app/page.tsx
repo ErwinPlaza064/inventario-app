@@ -44,8 +44,17 @@ export default function TareasPage() {
     fetchTareas();
   }, [fetchTareas]);
 
+  const [error, setError] = useState(false);
+
+  // ... (existing code)
+
   const agregarTarea = async () => {
-    if (!nuevaTarea.trim()) return;
+    if (!nuevaTarea.trim()) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    
     try {
       const resp = await apiFetch(ENDPOINTS.tareas, {
         method: "POST",
@@ -123,10 +132,17 @@ export default function TareasPage() {
           <input
             type="text"
             value={nuevaTarea}
-            onChange={(e) => setNuevaTarea(e.target.value)}
-            placeholder="Nueva Tarea..."
+            onChange={(e) => {
+              setNuevaTarea(e.target.value);
+              if (error) setError(false);
+            }}
+            placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
             onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
-            className="bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-black font-bold focus:border-black outline-none w-64"
+            className={`bg-gray-50 border-2 rounded-xl px-4 py-3 text-black font-bold outline-none w-64 transition-all ${
+              error 
+                ? "border-red-500 placeholder:text-red-400 animate-shake" 
+                : "border-gray-100 focus:border-black"
+            }`}
           />
           <button 
             onClick={agregarTarea}
