@@ -154,12 +154,12 @@ export default function TareasPage() {
       </header>
 
       {/* Kanban Board */}
-      <div className="flex-1 overflow-x-auto">
-        <div className="flex gap-6 h-full min-w-[1000px]">
+      <div className="flex-1 overflow-y-auto lg:overflow-x-auto pb-4 lg:pb-0">
+        <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-full w-full lg:min-w-[1000px]">
           {COLUMNS.map((col) => (
             <div 
               key={col.id}
-              className="flex-1 bg-gray-50/50 border-2 border-dashed border-gray-200 rounded-[32px] flex flex-col h-full max-h-[calc(100vh-200px)]"
+              className="flex-1 bg-gray-50/50 border-2 border-dashed border-gray-200 rounded-[32px] flex flex-col h-auto lg:h-full lg:max-h-[calc(100vh-200px)] shrink-0"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, col.id)}
             >
@@ -175,7 +175,7 @@ export default function TareasPage() {
               </div>
 
               {/* Tasks Container */}
-              <div className="p-4 space-y-3 overflow-y-auto flex-1 custom-scrollbar">
+              <div className="p-4 space-y-3 lg:overflow-y-auto flex-1 custom-scrollbar">
                 {tareas.filter(t => t.estado === col.id).length === 0 && (
                    <div className="text-center py-10 opacity-30">
                      <p className="text-xs font-bold uppercase text-gray-400">Vacío</p>
