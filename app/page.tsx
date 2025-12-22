@@ -17,7 +17,11 @@ export default function TareasPage() {
   const COLUMNS = [
     { id: "Pendiente", label: "PENDIENTE", color: "bg-gray-100 text-gray-500" },
     { id: "EnProceso", label: "POR HACER", color: "bg-blue-50 text-blue-600" },
-    { id: "Completada", label: "RESUELTO", color: "bg-green-50 text-green-600" }
+    {
+      id: "Completada",
+      label: "RESUELTO",
+      color: "bg-green-50 text-green-600",
+    },
   ];
 
   const fetchTareas = useCallback(async () => {
@@ -29,9 +33,10 @@ export default function TareasPage() {
         // 0 -> Pendiente, 1 -> EnProceso, 2 -> Completada
         const mappedData = data.map((t: any) => ({
           ...t,
-          estado: typeof t.estado === 'number' 
-            ? ["Pendiente", "EnProceso", "Completada"][t.estado] 
-            : t.estado
+          estado:
+            typeof t.estado === "number"
+              ? ["Pendiente", "EnProceso", "Completada"][t.estado]
+              : t.estado,
         }));
         setTareas(mappedData);
       }
@@ -56,11 +61,11 @@ export default function TareasPage() {
       return;
     }
     setError(false);
-    
+
     try {
       const resp = await apiFetch(ENDPOINTS.tareas, {
         method: "POST",
-        body: JSON.stringify({ titulo: nuevaTarea, estado: 0 }) // 0 = Pendiente
+        body: JSON.stringify({ titulo: nuevaTarea, estado: 0 }), // 0 = Pendiente
       });
       if (resp.ok) {
         setNuevaTarea("");
@@ -73,7 +78,9 @@ export default function TareasPage() {
 
   const eliminarTarea = async (id: number) => {
     try {
-      const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, { method: "DELETE" });
+      const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
+        method: "DELETE",
+      });
       if (resp.ok) fetchTareas();
     } catch (err) {
       console.error(err);
@@ -83,16 +90,20 @@ export default function TareasPage() {
   const updateEstado = async (id: number, nuevoEstado: TaskStatus) => {
     // Optimistic Update
     const previousTareas = [...tareas];
-    setTareas(tareas.map(t => t.id === id ? { ...t, estado: nuevoEstado } : t));
+    setTareas(
+      tareas.map((t) => (t.id === id ? { ...t, estado: nuevoEstado } : t))
+    );
 
     try {
       // Backend espera número: Pendiente=0, EnProceso=1, Completada=2
-      const estadoEnum = ["Pendiente", "EnProceso", "Completada"].indexOf(nuevoEstado);
-      const tarea = tareas.find(t => t.id === id);
-      
+      const estadoEnum = ["Pendiente", "EnProceso", "Completada"].indexOf(
+        nuevoEstado
+      );
+      const tarea = tareas.find((t) => t.id === id);
+
       const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ ...tarea, estado: estadoEnum, id })
+        body: JSON.stringify({ ...tarea, estado: estadoEnum, id }),
       });
 
       if (!resp.ok) {
@@ -108,31 +119,34 @@ export default function TareasPage() {
   const handleSaveTask = async (id: number, updates: Partial<Tarea>) => {
     // Optimistic Update
     const previousTareas = [...tareas];
-    setTareas(tareas.map(t => t.id === id ? { ...t, ...updates } : t));
+    setTareas(tareas.map((t) => (t.id === id ? { ...t, ...updates } : t)));
 
     try {
-      const tarea = tareas.find(t => t.id === id);
+      const tarea = tareas.find((t) => t.id === id);
       if (!tarea) return;
 
       const updatedTarea = { ...tarea, ...updates };
 
       // Convert status string to enum int if necessary
-      let estadoEnum = typeof updatedTarea.estado === 'string' 
-         ? ["Pendiente", "EnProceso", "Completada"].indexOf(updatedTarea.estado as string)
-         : updatedTarea.estado;
-      
+      let estadoEnum =
+        typeof updatedTarea.estado === "string"
+          ? ["Pendiente", "EnProceso", "Completada"].indexOf(
+              updatedTarea.estado as string
+            )
+          : updatedTarea.estado;
+
       const payload = { ...updatedTarea, estado: estadoEnum };
 
       const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
         method: "PUT",
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       if (!resp.ok) {
-        setTareas(previousTareas); 
+        setTareas(previousTareas);
         alert("Error al guardar cambios"); // Fallback simple
       } else {
-        fetchTareas(); 
+        fetchTareas();
       }
     } catch (err) {
       setTareas(previousTareas);
@@ -163,8 +177,12 @@ export default function TareasPage() {
     <div className="px-4 pt-24 pb-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10 h-dvh flex flex-col">
       <header className="mb-6 lg:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">IT TASKS</h1>
-          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">Tablero Kanban</p>
+          <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">
+            IT TASKS
+          </h1>
+          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">
+            Tablero Kanban
+          </p>
         </div>
         <div className="flex gap-2 w-full lg:w-auto">
           <input
@@ -177,12 +195,12 @@ export default function TareasPage() {
             placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
             onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
             className={`bg-gray-50 border-2 rounded-xl px-4 py-3 text-black font-bold outline-none flex-1 lg:w-64 transition-all ${
-              error 
-                ? "border-red-500 placeholder:text-red-400 animate-shake" 
+              error
+                ? "border-red-500 placeholder:text-red-400 animate-shake"
                 : "border-gray-100 focus:border-black"
             }`}
           />
-          <button 
+          <button
             onClick={agregarTarea}
             className="bg-black text-white p-4 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shrink-0"
           >
@@ -195,7 +213,7 @@ export default function TareasPage() {
       <div className="flex-1 overflow-y-auto lg:overflow-x-auto pb-4 lg:pb-0">
         <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-full w-full lg:min-w-[1000px]">
           {COLUMNS.map((col) => (
-            <div 
+            <div
               key={col.id}
               className="flex-1 bg-gray-50/50 border-2 border-dashed border-gray-200 rounded-[32px] flex flex-col h-auto lg:h-full lg:max-h-[calc(100vh-200px)] shrink-0"
               onDragOver={handleDragOver}
@@ -204,24 +222,31 @@ export default function TareasPage() {
               {/* Column Header */}
               <div className="p-6 pb-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-[30px]">
                 <h2 className="font-black text-sm tracking-widest uppercase text-gray-400 flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${col.color.split(" ")[0].replace("text", "bg").replace("50", "400")}`} />
+                  <div
+                    className={`w-3 h-3 rounded-full ${col.color
+                      .split(" ")[0]
+                      .replace("text", "bg")
+                      .replace("50", "400")}`}
+                  />
                   {col.label}
                 </h2>
                 <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-[10px] font-bold">
-                  {tareas.filter(t => t.estado === col.id).length}
+                  {tareas.filter((t) => t.estado === col.id).length}
                 </span>
               </div>
 
               {/* Tasks Container */}
               <div className="p-4 space-y-3 lg:overflow-y-auto flex-1 custom-scrollbar">
-                {tareas.filter(t => t.estado === col.id).length === 0 && (
-                   <div className="text-center py-10 opacity-30">
-                     <p className="text-xs font-bold uppercase text-gray-400">Vacío</p>
-                   </div>
+                {tareas.filter((t) => t.estado === col.id).length === 0 && (
+                  <div className="text-center py-10 opacity-30">
+                    <p className="text-xs font-bold uppercase text-gray-400">
+                      Vacío
+                    </p>
+                  </div>
                 )}
-                
+
                 {tareas
-                  .filter(t => t.estado === col.id)
+                  .filter((t) => t.estado === col.id)
                   .map((t) => (
                     <div
                       key={t.id}
@@ -230,37 +255,47 @@ export default function TareasPage() {
                       onClick={() => setSelectedTask(t)}
                       className="bg-white p-5 rounded-2xl border-2 border-transparent shadow-sm hover:shadow-lg hover:border-black cursor-pointer active:scale-95 transition-all group relative animate-scale-up"
                     >
-                      <p className="text-black font-bold text-sm mb-3 leading-snug">{t.titulo}</p>
-                      
+                      <p className="text-black font-bold text-sm mb-3 leading-snug">
+                        {t.titulo}
+                      </p>
+
                       {t.descripcion && (
-                         <div className="mb-3">
-                            <p className="text-xs text-gray-400 line-clamp-2">{t.descripcion}</p>
-                         </div>
+                        <div className="mb-3">
+                          <p className="text-xs text-gray-400 line-clamp-2">
+                            {t.descripcion}
+                          </p>
+                        </div>
                       )}
-                      
+
                       <div className="flex justify-between items-center mt-2">
-                         <div 
-                            className={`relative px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color} cursor-pointer group/badge transition-all hover:brightness-95`}
-                            onClick={(e) => e.stopPropagation()}
-                         >
-                           {col.id}
-                           {/* Mobile Dropdown Fallback */}
-                           <select
-                               value={t.estado}
-                               onChange={(e) => updateEstado(t.id!, e.target.value as TaskStatus)}
-                               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                           >
-                             <option value="Pendiente">Pendiente</option>
-                             <option value="EnProceso">Por Hacer</option>
-                             <option value="Completada">Resuelto</option>
-                           </select>
-                         </div>
-                         <div className="flex items-center gap-2">
-                            <div className="text-[10px] font-bold text-gray-300 flex items-center gap-1">
-                                <FiClock size={12} />
-                                <span>{new Date(t.fechaCreacion).toLocaleDateString()}</span>
-                            </div>
-                         </div>
+                        <div
+                          className={`relative px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color} cursor-pointer group/badge transition-all hover:brightness-95`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {col.id}
+                          {/* Mobile Dropdown Fallback */}
+                          <select
+                            value={t.estado}
+                            onChange={(e) =>
+                              updateEstado(t.id!, e.target.value as TaskStatus)
+                            }
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          >
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="EnProceso">Por Hacer</option>
+                            <option value="Completada">Resuelto</option>
+                          </select>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="text-[10px] font-bold text-gray-300 flex items-center gap-1">
+                            <FiClock size={12} />
+                            <span>
+                              {new Date(
+                                t.fechaCreacion || Date.now()
+                              ).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -271,14 +306,14 @@ export default function TareasPage() {
       </div>
 
       {selectedTask && (
-        <TaskModal 
+        <TaskModal
           task={selectedTask}
           isOpen={!!selectedTask}
           onClose={() => setSelectedTask(null)}
           onSave={handleSaveTask}
           onDelete={async (id) => {
-             await eliminarTarea(id);
-             setSelectedTask(null);
+            await eliminarTarea(id);
+            setSelectedTask(null);
           }}
         />
       )}
