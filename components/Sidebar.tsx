@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiBox, FiCheckSquare, FiFileText, FiLogOut, FiSettings } from "react-icons/fi";
+import { useState } from "react";
+import { SettingsModal } from "./SettingsModal";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -19,9 +21,13 @@ interface SidebarProps {
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const pathname = usePathname();
   const { logout, username } = useAuth();
+  const [showSettings, setShowSettings] = useState(false);
 
   return (
     <>
+      {/* Settings Modal */}
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
+      
       {/* Overlay para móvil */}
       {isOpen && (
         <div 
@@ -47,9 +53,18 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </div>
 
         {username && (
-          <div className="mb-8 p-4 bg-white/5 rounded-2xl border border-white/5 mx-2">
-            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Operador</p>
-            <p className="text-sm text-white font-black truncate">{username}</p>
+          <div className="mb-8 p-4 bg-white/5 rounded-2xl border border-white/5 mx-2 flex justify-between items-center group">
+            <div className="overflow-hidden">
+              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Operador</p>
+              <p className="text-sm text-white font-black truncate">{username}</p>
+            </div>
+            <button 
+              onClick={() => setShowSettings(true)}
+              className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
+              title="Configurar Perfil"
+            >
+              <FiSettings size={18} />
+            </button>
           </div>
         )}
 

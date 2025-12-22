@@ -7,6 +7,7 @@ interface AuthContextType {
   token: string | null;
   username: string | null;
   login: (token: string, username: string) => void;
+  updateUser: (username: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
   loading: boolean;
@@ -38,6 +39,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push('/');
   };
 
+  const updateUser = (newUser: string) => {
+    localStorage.setItem('it_suite_user', newUser);
+    setUsername(newUser);
+  };
+
   const logout = () => {
     localStorage.removeItem('it_suite_token');
     localStorage.removeItem('it_suite_user');
@@ -47,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, username, login, logout, isAuthenticated: !!token, loading }}>
+    <AuthContext.Provider value={{ token, username, login, logout, updateUser, isAuthenticated: !!token, loading }}>
       {children}
     </AuthContext.Provider>
   );
