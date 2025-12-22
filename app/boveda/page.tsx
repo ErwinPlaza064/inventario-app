@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { FiPlus, FiLock, FiClock, FiKey, FiUser } from "react-icons/fi";
 import { apiFetch } from "../../lib/api";
 import { CredencialCard } from "../../components/CredencialCard";
@@ -114,9 +115,9 @@ export default function BovedaPage() {
       )}
 
       {/* Modal Nueva Credencial */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-fade-in overflow-y-auto">
-          <div className="bg-white w-full max-w-lg rounded-[40px] p-6 sm:p-10 shadow-2xl relative animate-scale-up my-auto">
+      {showModal && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-start sm:items-center justify-center pt-20 sm:pt-0 p-4 sm:p-6 animate-fade-in overflow-y-auto">
+          <div className="bg-white w-full max-w-lg rounded-[40px] p-6 sm:p-10 shadow-2xl relative animate-scale-up">
             <h2 className="text-3xl font-black text-black mb-8 uppercase tracking-tighter">
               Guardar Secreto
             </h2>
@@ -204,7 +205,8 @@ export default function BovedaPage() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

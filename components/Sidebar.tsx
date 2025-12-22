@@ -56,12 +56,12 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         {username && (
           <div className="mb-8 p-4 bg-white/5 rounded-2xl border border-white/5 mx-2 flex justify-between items-center group">
             <div className="overflow-hidden">
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Operador</p>
+              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Agente</p>
               <p className="text-sm text-white font-black truncate">{username}</p>
             </div>
             <button 
               onClick={() => setShowSettings(true)}
-              className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
+              className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all"
               title="Configurar Perfil"
             >
               <FiSettings size={18} />
