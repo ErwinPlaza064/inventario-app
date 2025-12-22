@@ -126,7 +126,6 @@ export default function TareasPage() {
       <header className="mb-6 lg:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">IT TASKS</h1>
-          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">Tablero Kanban</p>
         </div>
         <div className="flex gap-2 w-full lg:w-auto">
           <input
