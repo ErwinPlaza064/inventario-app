@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiBox, FiCheckSquare, FiFileText, FiLogOut, FiSettings } from "react-icons/fi";
+import { FiBox, FiCheckSquare, FiFileText, FiLogOut, FiSettings, FiLock } from "react-icons/fi";
 import { useState } from "react";
 import { SettingsModal } from "./SettingsModal";
 
@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext";
 const menuItems = [
   { name: "Tareas IT", icon: FiCheckSquare, path: "/" },
   { name: "Notas Rápidas", icon: FiFileText, path: "/notas" },
+  { name: "Bóveda de Accesos", icon: FiLock, path: "/boveda" },
 ];
 
 interface SidebarProps {

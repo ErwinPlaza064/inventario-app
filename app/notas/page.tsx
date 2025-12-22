@@ -77,11 +77,10 @@ export default function NotasPage() {
   if (loading) return null;
 
   return (
-    <div className="px-4 pt-24 pb-4 lg:p-8 max-w-6xl mx-auto animate-fade-in lg:mt-10">
+    <div className="px-4 pt-24 pb-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10">
       <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-8 lg:mb-12 gap-6">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">NOTAS IT</h1>
-          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">IPs, Configs y secretos del departamento.</p>
         </div>
         <button 
           onClick={() => setShowModal(true)}
