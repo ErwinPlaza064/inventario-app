@@ -122,13 +122,13 @@ export default function TareasPage() {
   if (loading) return null;
 
   return (
-    <div className="p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10 h-screen flex flex-col">
-      <header className="mb-8 flex justify-between items-center">
+    <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10 h-screen flex flex-col">
+      <header className="mb-6 lg:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-black text-black tracking-tight uppercase">IT TASKS</h1>
-          <p className="text-gray-400 font-medium tracking-tight">Tablero Kanban</p>
+          <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">IT TASKS</h1>
+          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">Tablero Kanban</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full lg:w-auto">
           <input
             type="text"
             value={nuevaTarea}
@@ -138,7 +138,7 @@ export default function TareasPage() {
             }}
             placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
             onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
-            className={`bg-gray-50 border-2 rounded-xl px-4 py-3 text-black font-bold outline-none w-64 transition-all ${
+            className={`bg-gray-50 border-2 rounded-xl px-4 py-3 text-black font-bold outline-none flex-1 lg:w-64 transition-all ${
               error 
                 ? "border-red-500 placeholder:text-red-400 animate-shake" 
                 : "border-gray-100 focus:border-black"
@@ -146,7 +146,7 @@ export default function TareasPage() {
           />
           <button 
             onClick={agregarTarea}
-            className="bg-black text-white p-4 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg"
+            className="bg-black text-white p-4 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shrink-0"
           >
             <FiPlus size={20} />
           </button>

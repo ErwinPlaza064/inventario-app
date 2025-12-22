@@ -77,15 +77,15 @@ export default function NotasPage() {
   if (loading) return null;
 
   return (
-    <div className="p-8 max-w-6xl mx-auto animate-fade-in lg:mt-10">
-      <header className="flex justify-between items-end mb-12">
+    <div className="p-4 lg:p-8 max-w-6xl mx-auto animate-fade-in lg:mt-10">
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-8 lg:mb-12 gap-6">
         <div>
-          <h1 className="text-4xl font-black text-black tracking-tight uppercase">NOTAS IT</h1>
-          <p className="text-gray-400 font-medium tracking-tight">IPs, Configs y secretos del departamento.</p>
+          <h1 className="text-3xl lg:text-4xl font-black text-black tracking-tight uppercase">NOTAS IT</h1>
+          <p className="text-gray-400 font-medium tracking-tight text-sm lg:text-base">IPs, Configs y secretos del departamento.</p>
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-black text-white px-8 py-4 rounded-2xl font-black flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200"
+          className="w-full lg:w-auto bg-black text-white px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200"
         >
           <FiPlus /> NUEVA NOTA
         </button>
