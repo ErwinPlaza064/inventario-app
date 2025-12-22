@@ -194,8 +194,18 @@ export default function TareasPage() {
                       <p className="text-black font-bold text-sm mb-3 leading-snug">{t.titulo}</p>
                       
                       <div className="flex justify-between items-center mt-2">
-                         <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color}`}>
+                         <div className={`relative px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color} cursor-pointer group/badge transition-all hover:brightness-95`}>
                            {col.id}
+                           {/* Mobile Dropdown Fallback */}
+                           <select
+                              value={t.estado}
+                              onChange={(e) => updateEstado(t.id!, e.target.value as TaskStatus)}
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                           >
+                             <option value="Pendiente">Pendiente</option>
+                             <option value="EnProceso">Por Hacer</option>
+                             <option value="Completada">Resuelto</option>
+                           </select>
                          </div>
                          <button 
                             onClick={() => t.id && eliminarTarea(t.id)}
