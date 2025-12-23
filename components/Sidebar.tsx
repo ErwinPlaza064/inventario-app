@@ -39,11 +39,11 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-dvh w-64 bg-black dark:bg-[#0a0a0a] border-r border-white/10 dark:border-white/5 flex flex-col z-40 transition-all duration-300 ease-in-out ${
+      <aside className={`fixed left-0 top-0 h-dvh w-64 bg-black dark:bg-[#0a0a0a] border-r border-white/10 dark:border-white/5 flex flex-col z-40 transition-all duration-300 ease-in-out overflow-y-auto ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
-        {/* Scrollable container for all sidebar content */}
-        <div className="flex flex-col h-full min-h-0">
+        {/* All content in a flex column that takes minimum full height */}
+        <div className="flex flex-col min-h-full">
           {/* Header */}
           <div className="p-4 pb-4 shrink-0">
             <div className="mb-4 flex justify-between items-center gap-2">
@@ -83,8 +83,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             )}
           </div>
 
-          {/* Navigation - scrollable if needed */}
-          <nav className="flex-1 px-6 py-2 space-y-2 overflow-y-auto min-h-0">
+          {/* Navigation */}
+          <nav className="flex-1 px-6 py-2 space-y-2">
             {menuItems.map((item) => {
               const isActive = pathname === item.path;
               return (
@@ -105,8 +105,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             })}
           </nav>
 
-          {/* Footer - Logout button */}
-          <div className="shrink-0 p-6 pt-4 pb-8 border-t border-white/10">
+          {/* Footer - Logout button - always at the end */}
+          <div className="shrink-0 p-6 pt-4 pb-8 border-t border-white/10 mt-auto">
             <button 
               onClick={logout}
             className="flex items-center gap-3 px-4 py-3 w-full text-white/70 hover:text-white hover:bg-white/10 rounded-lg text-sm font-bold transition-all"
