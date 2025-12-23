@@ -4,17 +4,15 @@ import "./globals.css";
 import { Sidebar } from "../components/Sidebar";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { ThemeProvider } from "../context/ThemeContext";
+import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-
-import { useState } from "react";
-import { FiMenu } from "react-icons/fi";
 
 import { useRouter } from "next/navigation";
 
 function RootContent({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isOpen, closeSidebar } = useSidebar();
   const pathname = usePathname();
   const router = useRouter();
   const isAuthPage = pathname === "/login" || pathname === "/register";
@@ -36,22 +34,12 @@ function RootContent({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-black">
-      {/* Botón Hamburguesa para Móvil */}
-      {!isAuthPage && isAuthenticated && (
-        <button 
-          onClick={() => setIsSidebarOpen(true)}
-          className="lg:hidden fixed top-6 left-6 z-30 bg-black dark:bg-white text-white dark:text-black p-3 rounded-2xl shadow-xl shadow-black/10 dark:shadow-white/10 active:scale-90 transition-transform"
-        >
-          <FiMenu size={24} />
-        </button>
-      )}
-
       {/* Sidebar solo si está logeado y no es página de auth */}
       {!isAuthPage && isAuthenticated && (
-        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        <Sidebar isOpen={isOpen} onClose={closeSidebar} />
       )}
       
-      <main className={`flex-1 transition-all duration-300 ${!isAuthPage && isAuthenticated ? 'lg:ml-64' : 'ml-0'}`}>
+      <main className="flex-1 transition-all duration-300">
         {children}
       </main>
     </div>
@@ -66,14 +54,17 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <title>IT SUITE - Management Pro</title>
+        <title>IT Controller</title>
+        <link rel="icon" href="/favicon.png" type="image/png" />
       </head>
       <body className="antialiased bg-white dark:bg-black">
         <ThemeProvider>
           <AuthProvider>
-            <RootContent>
-              {children}
-            </RootContent>
+            <SidebarProvider>
+              <RootContent>
+                {children}
+              </RootContent>
+            </SidebarProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

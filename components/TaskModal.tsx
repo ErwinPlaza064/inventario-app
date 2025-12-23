@@ -43,7 +43,7 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
 
   const modalContent = (
     <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-fade-in overflow-y-auto">
-      <div className="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-[32px] shadow-2xl relative animate-scale-up flex flex-col max-h-[90vh] my-auto">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-2xl relative animate-scale-up flex flex-col max-h-[90vh] my-auto">
         {/* Header */}
         <div className="flex justify-between items-start p-8 border-b border-gray-100 dark:border-gray-800">
            <div className="flex-1 mr-8">
@@ -106,10 +106,10 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-between gap-4 bg-gray-50/50 dark:bg-gray-800/50 rounded-b-[32px]">
+        <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-between gap-4 bg-gray-50/50 dark:bg-gray-800/50 rounded-b-2xl">
            <button 
              onClick={handleDelete}
-             className="px-6 py-4 text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all flex items-center gap-2"
+             className="px-6 py-4 text-red-500 font-bold hover:bg-red-50 rounded-lg transition-all flex items-center gap-2"
              disabled={loading}
            >
              <FiTrash2 /> ELIMINAR
@@ -125,7 +125,7 @@ export const TaskModal = ({ task, isOpen, onClose, onSave, onDelete }: TaskModal
               </button>
               <button 
                 onClick={handleSave}
-                className="px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-300 dark:shadow-gray-700 flex items-center gap-2"
+                className="px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-black rounded-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-300 dark:shadow-gray-700 flex items-center gap-2"
                 disabled={loading}
               >
                 {loading ? "GUARDANDO..." : <><FiSave /> GUARDAR CAMBIOS</>}

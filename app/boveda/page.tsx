@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { FiPlus, FiLock, FiClock, FiKey, FiUser } from "react-icons/fi";
+import { FiPlus, FiLock, FiClock, FiKey, FiUser, FiMenu } from "react-icons/fi";
 import { apiFetch } from "../../lib/api";
 import { CredencialCard } from "../../components/CredencialCard";
+import { useSidebar } from "../../context/SidebarContext";
 
 interface Credencial {
   id: number;
@@ -15,6 +16,7 @@ interface Credencial {
 }
 
 export default function BovedaPage() {
+  const { openSidebar } = useSidebar();
   const [credenciales, setCredenciales] = useState<Credencial[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -80,16 +82,22 @@ export default function BovedaPage() {
   if (loading) return null;
 
   return (
-    <div className="px-4 pt-24 pb-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10">
+    <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in">
       <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-8 lg:mb-12 gap-6">
-        <div>
-          <h1 className="text-3xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={openSidebar}
+            className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg active:scale-90 transition-transform"
+          >
+            <FiMenu size={20} />
+          </button>
+          <h1 className="text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">
             BÓVEDA DE ACCESOS
           </h1>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="w-full lg:w-auto bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200 relative z-10"
+          className="w-full lg:w-auto bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-lg font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200 relative z-10"
         >
           <FiPlus /> NUEVA CLAVE
         </button>
@@ -117,7 +125,7 @@ export default function BovedaPage() {
       {/* Modal Nueva Credencial */}
       {showModal && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start sm:items-center justify-center pt-20 sm:pt-0 p-4 sm:p-6 animate-fade-in overflow-y-auto">
-          <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-[40px] p-6 sm:p-10 shadow-2xl dark:shadow-none relative animate-scale-up">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-lg p-6 sm:p-10 shadow-2xl dark:shadow-none relative animate-scale-up">
             <h2 className="text-3xl font-black text-black dark:text-white mb-8 uppercase tracking-tighter">
               Guardar Secreto
             </h2>
@@ -198,7 +206,7 @@ export default function BovedaPage() {
                 </button>
                 <button
                   onClick={guardarCredencial}
-                  className="flex-1 bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200"
+                  className="flex-1 bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-lg hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200"
                 >
                   GUARDAR
                 </button>

@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { FiPlus, FiFileText, FiTrash2, FiClock } from "react-icons/fi";
+import { FiPlus, FiFileText, FiTrash2, FiClock, FiMenu } from "react-icons/fi";
 import { apiFetch } from "../../lib/api";
 import { ENDPOINTS } from "../../lib/config";
+import { useSidebar } from "../../context/SidebarContext";
 
 interface Nota {
   id: number;
@@ -14,6 +15,7 @@ interface Nota {
 }
 
 export default function NotasPage() {
+  const { openSidebar } = useSidebar();
   const [notas, setNotas] = useState<Nota[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -78,14 +80,20 @@ export default function NotasPage() {
   if (loading) return null;
 
   return (
-    <div className="px-4 pt-24 pb-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10">
+    <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in">
       <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-8 lg:mb-12 gap-6">
-        <div>
-          <h1 className="text-3xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">NOTAS IT</h1>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={openSidebar}
+            className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg active:scale-90 transition-transform"
+          >
+            <FiMenu size={20} />
+          </button>
+          <h1 className="text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">NOTAS IT</h1>
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="w-full lg:w-auto bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200 relative z-10"
+          className="w-full lg:w-auto bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-lg font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200 relative z-10"
         >
           <FiPlus /> NUEVA NOTA
         </button>
@@ -125,7 +133,7 @@ export default function NotasPage() {
       {/* Modal Nueva Nota */}
       {showModal && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start sm:items-center justify-center pt-20 sm:pt-0 p-4 sm:p-6 animate-fade-in overflow-y-auto">
-          <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-[40px] p-6 sm:p-10 shadow-2xl dark:shadow-none relative animate-scale-up">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-lg p-6 sm:p-10 shadow-2xl dark:shadow-none relative animate-scale-up">
             <h2 className="text-3xl font-black text-black dark:text-white mb-8 uppercase tracking-tighter">Nueva Nota IT</h2>
             <div className="space-y-4">
               <input
@@ -165,7 +173,7 @@ export default function NotasPage() {
                 </button>
                 <button 
                   onClick={guardarNota}
-                  className="flex-1 bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200"
+                  className="flex-1 bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-lg hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200"
                 >
                   GUARDAR NOTA
                 </button>

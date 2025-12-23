@@ -1,19 +1,20 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { FiPlus, FiCheckCircle, FiClock, FiTrash2 } from "react-icons/fi";
-import { Tarea, TaskStatus } from "../types/task";
+import { FiPlus, FiCheckCircle, FiClock, FiTrash2, FiMenu, FiMonitor, FiCode, FiWifi, FiFileText, FiTool } from "react-icons/fi";
+import { Tarea, TaskStatus, TaskCategory, CATEGORIES, detectCategory } from "../types/task";
 import { apiFetch } from "../lib/api";
 import { ENDPOINTS } from "../lib/config";
 import { TaskModal } from "../components/TaskModal";
+import { useSidebar } from "../context/SidebarContext";
 
 export default function TareasPage() {
+  const { openSidebar } = useSidebar();
   const [tareas, setTareas] = useState<Tarea[]>([]);
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState<Tarea | null>(null);
 
-  // Columnas del Kanban
   const COLUMNS = [
     { id: "Pendiente", label: "PENDIENTE", color: "bg-gray-100 text-gray-500" },
     { id: "EnProceso", label: "POR HACER", color: "bg-blue-50 text-blue-600" },
@@ -37,6 +38,10 @@ export default function TareasPage() {
             typeof t.estado === "number"
               ? ["Pendiente", "EnProceso", "Completada"][t.estado]
               : t.estado,
+          categoria:
+            typeof t.categoria === "number"
+              ? ["Hardware", "Software", "Redes", "Documentacion", "Mantenimiento"][t.categoria]
+              : t.categoria || "Hardware",
         }));
         setTareas(mappedData);
       }
@@ -63,9 +68,13 @@ export default function TareasPage() {
     setError(false);
 
     try {
+      // Auto-detectar categoría basada en el título
+      const categoria = detectCategory(nuevaTarea);
+      const categoriaEnum = ["Hardware", "Software", "Redes", "Documentacion", "Mantenimiento"].indexOf(categoria);
+      
       const resp = await apiFetch(ENDPOINTS.tareas, {
         method: "POST",
-        body: JSON.stringify({ titulo: nuevaTarea, estado: 0 }), // 0 = Pendiente
+        body: JSON.stringify({ titulo: nuevaTarea, estado: 0, categoria: categoriaEnum }),
       });
       if (resp.ok) {
         setNuevaTarea("");
@@ -100,10 +109,15 @@ export default function TareasPage() {
         nuevoEstado
       );
       const tarea = tareas.find((t) => t.id === id);
+      
+      // Convertir categoría a número también
+      const categoriaEnum = tarea?.categoria 
+        ? ["Hardware", "Software", "Redes", "Documentacion", "Mantenimiento"].indexOf(tarea.categoria)
+        : 0;
 
       const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ ...tarea, estado: estadoEnum, id }),
+        body: JSON.stringify({ ...tarea, estado: estadoEnum, categoria: categoriaEnum, id }),
       });
 
       if (!resp.ok) {
@@ -134,8 +148,15 @@ export default function TareasPage() {
               updatedTarea.estado as string
             )
           : updatedTarea.estado;
+      
+      // Convert category string to enum int
+      let categoriaEnum = updatedTarea.categoria
+        ? ["Hardware", "Software", "Redes", "Documentacion", "Mantenimiento"].indexOf(
+            updatedTarea.categoria as string
+          )
+        : 0;
 
-      const payload = { ...updatedTarea, estado: estadoEnum };
+      const payload = { ...updatedTarea, estado: estadoEnum, categoria: categoriaEnum };
 
       const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
         method: "PUT",
@@ -174,17 +195,20 @@ export default function TareasPage() {
   if (loading) return null;
 
   return (
-    <div className="px-4 pt-24 pb-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in lg:mt-10 h-dvh flex flex-col">
+    <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in h-dvh flex flex-col">
       <header className="mb-6 lg:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div>
-          <h1 className="text-3xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={openSidebar}
+            className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg active:scale-90 transition-transform"
+          >
+            <FiMenu size={20} />
+          </button>
+          <h1 className="text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">
             IT TASKS
           </h1>
-          <p className="text-gray-400 dark:text-gray-500 font-medium tracking-tight text-sm lg:text-base">
-            Tablero Kanban
-          </p>
         </div>
-        <div className="flex gap-2 w-full lg:w-auto">
+        <div className="flex gap-2 w-full lg:w-auto items-center">
           <input
             type="text"
             value={nuevaTarea}
@@ -194,7 +218,7 @@ export default function TareasPage() {
             }}
             placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
             onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
-            className={`bg-gray-50 dark:bg-gray-900 border-2 rounded-xl px-4 py-3 text-black dark:text-white font-bold outline-none flex-1 lg:w-64 transition-all ${
+            className={`bg-gray-50 dark:bg-gray-900 border-2 rounded-lg px-3 py-2 text-black dark:text-white font-bold outline-none flex-1 lg:w-64 transition-all text-sm ${
               error
                 ? "border-red-500 placeholder:text-red-400 animate-shake"
                 : "border-gray-100 dark:border-gray-800 focus:border-black dark:focus:border-white"
@@ -202,7 +226,7 @@ export default function TareasPage() {
           />
           <button
             onClick={agregarTarea}
-            className="bg-black dark:bg-white text-white dark:text-black p-4 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shrink-0"
+            className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg hover:scale-105 active:scale-95 transition-all shrink-0"
           >
             <FiPlus size={20} />
           </button>
@@ -268,23 +292,40 @@ export default function TareasPage() {
                       )}
 
                       <div className="flex justify-between items-center mt-2">
-                        <div
-                          className={`relative px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color} cursor-pointer group/badge transition-all hover:brightness-95`}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {col.id}
-                          {/* Mobile Dropdown Fallback */}
-                          <select
-                            value={t.estado}
-                            onChange={(e) =>
-                              updateEstado(t.id!, e.target.value as TaskStatus)
-                            }
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`relative px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${col.color} cursor-pointer group/badge transition-all hover:brightness-95`}
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="EnProceso">Por Hacer</option>
-                            <option value="Completada">Resuelto</option>
-                          </select>
+                            {col.id}
+                            {/* Mobile Dropdown Fallback */}
+                            <select
+                              value={t.estado}
+                              onChange={(e) =>
+                                updateEstado(t.id!, e.target.value as TaskStatus)
+                              }
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            >
+                              <option value="Pendiente">Pendiente</option>
+                              <option value="EnProceso">Por Hacer</option>
+                              <option value="Completada">Resuelto</option>
+                            </select>
+                          </div>
+                          {/* Category Badge */}
+                          {t.categoria && CATEGORIES[t.categoria] && (() => {
+                            const iconMap: Record<string, React.ReactNode> = {
+                              FiMonitor: <FiMonitor size={10} />,
+                              FiCode: <FiCode size={10} />,
+                              FiWifi: <FiWifi size={10} />,
+                              FiFileText: <FiFileText size={10} />,
+                              FiTool: <FiTool size={10} />,
+                            };
+                            return (
+                              <span className={`px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 ${CATEGORIES[t.categoria!].color}`}>
+                                {iconMap[CATEGORIES[t.categoria!].iconName]} {CATEGORIES[t.categoria!].label}
+                              </span>
+                            );
+                          })()}
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="text-[10px] font-bold text-gray-300 flex items-center gap-1">

@@ -34,82 +34,87 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       {/* Overlay para móvil */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30"
           onClick={onClose}
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-screen w-64 bg-black dark:bg-[#0a0a0a] border-r border-white/10 dark:border-white/5 flex flex-col p-6 z-40 transition-all duration-300 ease-in-out lg:translate-x-0 ${
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-black dark:bg-[#0a0a0a] border-r border-white/10 dark:border-white/5 flex flex-col z-40 transition-all duration-300 ease-in-out overflow-hidden ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
-        <div className="mb-8 px-2 flex justify-between items-center">
-          <div>
-            <h1 className="text-xl font-black tracking-tighter text-white">
-              IT SUITE<span className="text-gray-500">.</span>
-            </h1>
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Management Pro</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* Theme Toggle */}
-            <button 
-              onClick={toggleTheme}
-              className="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-xl transition-all"
-              title={theme === "light" ? "Modo Oscuro" : "Modo Claro"}
-            >
-              {theme === "light" ? <FiMoon size={18} /> : <FiSun size={18} />}
-            </button>
-            {/* Botón cerrar para móvil */}
-            <button onClick={onClose} className="lg:hidden text-white p-2">
-              <FiLogOut className="rotate-180" size={20} />
-            </button>
-          </div>
-        </div>
-
-        {username && (
-          <div className="mb-8 p-4 bg-white/5 rounded-2xl border border-white/5 mx-2 flex justify-between items-center group">
-            <div className="overflow-hidden">
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Agente</p>
-              <p className="text-sm text-white font-black truncate">{username}</p>
+        {/* Scrollable container for all sidebar content */}
+        <div className="flex flex-col h-full overflow-y-auto">
+          {/* Header */}
+          <div className="p-4 pb-4 shrink-0">
+            <div className="mb-4 flex justify-between items-center gap-2">
+              <h1 className="text-lg font-black tracking-tighter text-white whitespace-nowrap">
+                IT CONTROLLER
+              </h1>
+              <div className="flex items-center gap-1">
+                {/* Theme Toggle */}
+                <button 
+                  onClick={toggleTheme}
+                  className="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-all"
+                  title={theme === "light" ? "Modo Oscuro" : "Modo Claro"}
+                >
+                  {theme === "light" ? <FiMoon size={18} /> : <FiSun size={18} />}
+                </button>
+                {/* Botón cerrar */}
+                <button onClick={onClose} className="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-all">
+                  <FiLogOut className="rotate-180" size={18} />
+                </button>
+              </div>
             </div>
+
+            {username && (
+              <div className="p-4 bg-white/5 rounded-lg border border-white/5 mx-2 flex justify-between items-center group">
+                <div className="overflow-hidden flex-1 min-w-0">
+                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Agente</p>
+                  <p className="text-sm text-white font-black truncate">{username}</p>
+                </div>
+                <button 
+                  onClick={() => setShowSettings(true)}
+                  className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all shrink-0"
+                  title="Configurar Perfil"
+                >
+                  <FiSettings size={18} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-6 py-2 space-y-2">
+            {menuItems.map((item) => {
+              const isActive = pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={onClose}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ${
+                    isActive 
+                      ? "bg-white text-black shadow-xl shadow-white/5" 
+                      : "text-gray-500 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <item.icon size={20} />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Footer - Logout button */}
+          <div className="shrink-0 p-6 pt-4 pb-8 border-t border-white/10">
             <button 
-              onClick={() => setShowSettings(true)}
-              className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all"
-              title="Configurar Perfil"
+              onClick={logout}
+            className="flex items-center gap-3 px-4 py-3 w-full text-white/70 hover:text-white hover:bg-white/10 rounded-lg text-sm font-bold transition-all"
             >
-              <FiSettings size={18} />
+              <FiLogOut size={20} />
+              Cerrar Sesión
             </button>
           </div>
-        )}
-
-        <nav className="flex-1 space-y-2">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                href={item.path}
-                onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-bold transition-all ${
-                  isActive 
-                    ? "bg-white text-black shadow-xl shadow-white/5" 
-                    : "text-gray-500 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <item.icon size={20} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="pt-6 border-t border-white/10 space-y-2">
-          <button 
-            onClick={logout}
-            className="flex items-center gap-3 px-4 py-4 w-full text-red-500 hover:bg-red-500/10 rounded-2xl text-sm font-bold transition-all"
-          >
-            <FiLogOut size={20} />
-            Cerrar Sesión
-          </button>
         </div>
       </aside>
     </>
