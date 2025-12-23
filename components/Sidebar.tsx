@@ -2,14 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiBox, FiCheckSquare, FiFileText, FiLogOut, FiSettings, FiLock, FiSun, FiMoon } from "react-icons/fi";
-import { useState } from "react";
-import { SettingsModal } from "./SettingsModal";
-
+import { FiBox, FiCheckSquare, FiFileText, FiLogOut, FiSettings, FiLock, FiSun, FiMoon, FiActivity } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 
 const menuItems = [
+  { name: "Novedades", icon: FiActivity, path: "/novedades" },
   { name: "Tareas IT", icon: FiCheckSquare, path: "/" },
   { name: "Notas Rápidas", icon: FiFileText, path: "/notas" },
   { name: "Bóveda de Accesos", icon: FiLock, path: "/boveda" },
@@ -24,13 +22,9 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const pathname = usePathname();
   const { logout, username } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [showSettings, setShowSettings] = useState(false);
 
   return (
     <>
-      {/* Settings Modal */}
-      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
-      
       {/* Overlay para móvil */}
       {isOpen && (
         <div 
@@ -72,13 +66,14 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Agente</p>
                   <p className="text-sm text-white font-black truncate">{username}</p>
                 </div>
-                <button 
-                  onClick={() => setShowSettings(true)}
+                <Link 
+                  href="/configuracion"
+                  onClick={onClose}
                   className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all shrink-0"
-                  title="Configurar Perfil"
+                  title="Configuración"
                 >
                   <FiSettings size={18} />
-                </button>
+                </Link>
               </div>
             )}
           </div>

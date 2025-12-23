@@ -1,18 +1,28 @@
-
 import { useState } from "react";
-import { FiEye, FiEyeOff, FiCopy, FiTrash2, FiUser, FiKey } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiCopy, FiTrash2, FiUser, FiKey, FiEdit3, FiServer, FiWifi, FiLock, FiCode, FiGrid, FiPrinter } from "react-icons/fi";
+import { Credencial, CREDENTIAL_CATEGORIES } from "../types/credential";
 
-interface CredencialCardProps {
-  id: number;
-  titulo: string;
-  valor: string;
-  usuario?: string;
+interface CredencialCardProps extends Credencial {
   onDelete: (id: number) => void;
+  onEdit: (cred: Credencial) => void;
 }
 
-export const CredencialCard = ({ id, titulo, valor, usuario, onDelete }: CredencialCardProps) => {
+export const CredencialCard = ({ id, titulo, valor, usuario, categoria = "General", fechaCreacion, onDelete, onEdit }: CredencialCardProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const categoryConfig = CREDENTIAL_CATEGORIES[categoria] || CREDENTIAL_CATEGORIES["General"];
+
+  const iconMap: Record<string, React.ReactNode> = {
+    FiLock: <FiLock size={20} />,
+    FiWifi: <FiWifi size={20} />,
+    FiServer: <FiServer size={20} />,
+    FiUser: <FiUser size={20} />,
+    FiCode: <FiCode size={20} />,
+    FiGrid: <FiGrid size={20} />,
+    FiKey: <FiKey size={20} />,
+    FiPrinter: <FiPrinter size={20} />,
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(valor);
@@ -23,21 +33,29 @@ export const CredencialCard = ({ id, titulo, valor, usuario, onDelete }: Credenc
   return (
     <div className="bg-white dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-800 p-6 rounded-[32px] hover:border-black dark:hover:border-white transition-all group flex flex-col h-full shadow-sm dark:shadow-none hover:shadow-xl hover:shadow-gray-100 dark:hover:shadow-none relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute -right-4 -top-4 w-24 h-24 bg-gray-50 dark:bg-gray-800 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+      <div className={`absolute -right-4 -top-4 w-24 h-24 rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500 pointer-events-none ${categoryConfig.color.replace('text', 'bg').split(' ')[0]}`} />
 
       <div className="flex justify-between items-start mb-4 relative z-10">
-        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-2xl text-black dark:text-white group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all">
-           <FiKey size={20} />
+        <div className={`p-3 rounded-2xl transition-all ${categoryConfig.color}`}>
+           {iconMap[categoryConfig.iconName]}
         </div>
-        <button 
-           onClick={() => onDelete(id)}
-           className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 dark:text-gray-600 hover:text-red-500 transition-all rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
-        >
-           <FiTrash2 size={18} />
-        </button>
+        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button 
+             onClick={() => onEdit({ id, titulo, valor, usuario, categoria, fechaCreacion })}
+             className="p-2 text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all"
+          >
+             <FiEdit3 size={18} />
+          </button>
+          <button 
+             onClick={() => onDelete(id)}
+             className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all"
+          >
+             <FiTrash2 size={18} />
+          </button>
+        </div>
       </div>
 
-      <h3 className="text-lg font-black text-black dark:text-white uppercase mb-1 tracking-tight truncate pr-2 relative z-10">{titulo}</h3>
+      <h3 className="text-lg font-black text-black dark:text-white uppercase mb-1 tracking-tight truncate pr-2 relative z-10" title={titulo}>{titulo}</h3>
       
       {usuario && (
         <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500 mb-4 relative z-10">
