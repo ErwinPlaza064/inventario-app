@@ -38,10 +38,8 @@ function RootContent({ children }: { children: React.ReactNode }) {
       {!isAuthPage && isAuthenticated && (
         <Sidebar isOpen={isOpen} onClose={closeSidebar} />
       )}
-      
-      <main className="flex-1 transition-all duration-300">
-        {children}
-      </main>
+
+      <main className="flex-1 transition-all duration-300">{children}</main>
     </div>
   );
 }
@@ -61,9 +59,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <SidebarProvider>
-              <RootContent>
-                {children}
-              </RootContent>
+              <RootContent>{children}</RootContent>
             </SidebarProvider>
           </AuthProvider>
         </ThemeProvider>
