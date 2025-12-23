@@ -201,7 +201,7 @@ export default function NotasPage() {
                       {NotaPrioridad[nota.prioridad]}
                     </span>
                     <button 
-                      onClick={() => eliminarNota(nota.id)}
+                      onClick={(e) => { e.stopPropagation(); eliminarNota(nota.id); }}
                       className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 dark:text-gray-600 hover:text-red-500 transition-all"
                     >
                       <FiTrash2 size={20} />
