@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FiUserPlus, FiUser, FiLock, FiArrowLeft } from "react-icons/fi";
+import { FiUserPlus, FiUser, FiLock, FiArrowLeft, FiSun, FiMoon } from "react-icons/fi";
+import { useTheme } from "../../context/ThemeContext";
 import { ENDPOINTS } from "../../lib/config";
 
 export default function RegisterPage() {
@@ -14,6 +15,7 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,23 +49,32 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black flex">
+    <div className="min-h-screen bg-white dark:bg-black flex relative">
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all z-20"
+        aria-label="Toggle theme"
+      >
+        {theme === "dark" ? <FiSun size={18} /> : <FiMoon size={18} />}
+      </button>
+
       {/* Left Panel - Illustration (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gray-100 dark:bg-gray-900 items-center justify-center p-12 relative overflow-hidden">
-        <div className="relative z-10 w-full max-w-xl">
+      <div className="hidden lg:flex lg:w-1/2 bg-gray-100 dark:bg-gray-900 items-center justify-center p-6 xl:p-12 relative overflow-hidden">
+        <div className="relative z-10 w-full max-w-sm xl:max-w-xl">
           <Image
             src="/login-art.png"
             alt="IT Controller Illustration"
             width={800}
             height={800}
-            className="w-full h-auto"
+            className="w-full h-auto animate-float animate-glow"
             priority
           />
-          <div className="text-center mt-8">
-            <h2 className="text-2xl font-black text-gray-800 dark:text-white tracking-tight">
+          <div className="text-center mt-4 xl:mt-8">
+            <h2 className="text-xl xl:text-2xl font-black text-gray-800 dark:text-white tracking-tight">
               IT Controller
             </h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">
+            <p className="text-gray-500 dark:text-gray-400 mt-1 xl:mt-2 font-medium text-sm xl:text-base">
               Únete al equipo de gestión IT
             </p>
           </div>
@@ -71,28 +82,28 @@ export default function RegisterPage() {
       </div>
 
       {/* Right Panel - Register Form */}
-      <div className="w-full lg:w-1/2 flex items-start lg:items-center justify-center p-6 pt-4 lg:p-12">
+      <div className="w-full lg:w-1/2 flex items-start lg:items-center justify-center p-4 pt-4 lg:p-6 xl:p-12 overflow-y-auto">
         <div className="w-full max-w-md animate-fade-in">
-          <Link href="/login" className="inline-flex items-center gap-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white font-bold text-sm mb-4 transition-colors group">
+          <Link href="/login" className="inline-flex items-center gap-2 text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white font-bold text-sm mb-3 transition-colors group">
             <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" /> Volver al Login
           </Link>
 
           {/* Mobile Logo */}
-          <div className="lg:hidden text-center mb-4">
+          <div className="lg:hidden text-center mb-3">
             <Image
               src="/login-art.png"
               alt="IT Controller"
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               className="mx-auto"
             />
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-black text-black dark:text-white tracking-tight mb-2">
+          <div className="mb-4 lg:mb-6">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-black text-black dark:text-white tracking-tight mb-1">
               Crear Cuenta
             </h1>
-            <p className="text-gray-400 dark:text-gray-500 font-medium">
+            <p className="text-gray-400 dark:text-gray-500 font-medium text-sm lg:text-base">
               Únete al equipo de IT
             </p>
           </div>

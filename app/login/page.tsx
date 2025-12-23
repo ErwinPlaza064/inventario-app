@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiUser, FiLock, FiArrowRight } from "react-icons/fi";
+import { FiUser, FiLock, FiArrowRight, FiSun, FiMoon } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 import { ENDPOINTS } from "../../lib/config";
 
 export default function LoginPage() {
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +22,7 @@ export default function LoginPage() {
       setError("Por favor completa todos los campos.");
       return;
     }
-    
+
     setIsSubmitting(true);
     setError("");
 
@@ -46,23 +48,32 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black flex">
+    <div className="min-h-screen bg-white dark:bg-black flex relative">
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all z-20"
+        aria-label="Toggle theme"
+      >
+        {theme === "dark" ? <FiSun size={18} /> : <FiMoon size={18} />}
+      </button>
+
       {/* Left Panel - Illustration (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gray-100 dark:bg-gray-900 items-center justify-center p-12 relative overflow-hidden">
-        <div className="relative z-10 w-full max-w-xl">
+      <div className="hidden lg:flex lg:w-1/2 bg-gray-100 dark:bg-gray-900 items-center justify-center p-6 xl:p-12 relative overflow-hidden">
+        <div className="relative z-10 w-full max-w-sm xl:max-w-xl">
           <Image
             src="/login-art.png"
             alt="IT Controller Illustration"
             width={800}
             height={800}
-            className="w-full h-auto"
+            className="w-full h-auto animate-float animate-glow"
             priority
           />
-          <div className="text-center mt-8">
-            <h2 className="text-2xl font-black text-gray-800 dark:text-white tracking-tight">
+          <div className="text-center mt-4 xl:mt-8">
+            <h2 className="text-xl xl:text-2xl font-black text-gray-800 dark:text-white tracking-tight">
               IT Controller
             </h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">
+            <p className="text-gray-500 dark:text-gray-400 mt-1 xl:mt-2 font-medium text-sm xl:text-base">
               Gestión inteligente de tareas IT
             </p>
           </div>
@@ -70,24 +81,24 @@ export default function LoginPage() {
       </div>
 
       {/* Right Panel - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-start lg:items-center justify-center p-6 pt-4 lg:p-12">
+      <div className="w-full lg:w-1/2 flex items-start lg:items-center justify-center p-4 pt-4 lg:p-6 xl:p-12 overflow-y-auto">
         <div className="w-full max-w-md animate-fade-in">
           {/* Mobile Logo */}
-          <div className="lg:hidden text-center mb-4">
+          <div className="lg:hidden text-center mb-3">
             <Image
               src="/login-art.png"
               alt="IT Controller"
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               className="mx-auto"
             />
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-black text-black dark:text-white tracking-tight mb-2">
+          <div className="mb-4 lg:mb-6">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-black text-black dark:text-white tracking-tight mb-1">
               Bienvenido
             </h1>
-            <p className="text-gray-400 dark:text-gray-500 font-medium">
+            <p className="text-gray-400 dark:text-gray-500 font-medium text-sm lg:text-base">
               Ingresa tus credenciales para continuar
             </p>
           </div>
@@ -104,7 +115,13 @@ export default function LoginPage() {
                 Usuario
               </label>
               <div className="relative group">
-                <FiUser className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${error && !username ? "text-red-400" : "text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white"}`} />
+                <FiUser
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
+                    error && !username
+                      ? "text-red-400"
+                      : "text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white"
+                  }`}
+                />
                 <input
                   type="text"
                   placeholder="Tu nombre de usuario"
@@ -115,8 +132,8 @@ export default function LoginPage() {
                   }}
                   disabled={isSubmitting}
                   className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-lg py-3 pl-12 pr-4 text-black dark:text-white font-medium outline-none transition-all ${
-                    error && !username 
-                      ? "border-red-500 placeholder:text-red-400 animate-shake" 
+                    error && !username
+                      ? "border-red-500 placeholder:text-red-400 animate-shake"
                       : "border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white"
                   }`}
                 />
@@ -128,7 +145,13 @@ export default function LoginPage() {
                 Contraseña
               </label>
               <div className="relative group">
-                <FiLock className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${error && !password ? "text-red-400" : "text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white"}`} />
+                <FiLock
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
+                    error && !password
+                      ? "text-red-400"
+                      : "text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white"
+                  }`}
+                />
                 <input
                   type="password"
                   placeholder="Tu contraseña"
@@ -139,8 +162,8 @@ export default function LoginPage() {
                   }}
                   disabled={isSubmitting}
                   className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-lg py-3 pl-12 pr-4 text-black dark:text-white font-medium outline-none transition-all ${
-                    error && !password 
-                      ? "border-red-500 placeholder:text-red-400 animate-shake" 
+                    error && !password
+                      ? "border-red-500 placeholder:text-red-400 animate-shake"
                       : "border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white"
                   }`}
                 />
@@ -160,7 +183,10 @@ export default function LoginPage() {
           <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
             <p className="text-center text-sm text-gray-400 dark:text-gray-500 font-medium">
               ¿No tienes cuenta?{" "}
-              <Link href="/register" className="text-black dark:text-white font-bold hover:underline underline-offset-4">
+              <Link
+                href="/register"
+                className="text-black dark:text-white font-bold hover:underline underline-offset-4"
+              >
                 Regístrate aquí
               </Link>
             </p>
