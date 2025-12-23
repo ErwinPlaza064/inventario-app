@@ -39,11 +39,11 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-screen w-64 bg-black dark:bg-[#0a0a0a] border-r border-white/10 dark:border-white/5 flex flex-col z-40 transition-all duration-300 ease-in-out overflow-hidden ${
+      <aside className={`fixed left-0 top-0 h-dvh w-64 bg-black dark:bg-[#0a0a0a] border-r border-white/10 dark:border-white/5 flex flex-col z-40 transition-all duration-300 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
         {/* Scrollable container for all sidebar content */}
-        <div className="flex flex-col h-full overflow-y-auto">
+        <div className="flex flex-col h-full min-h-0">
           {/* Header */}
           <div className="p-4 pb-4 shrink-0">
             <div className="mb-4 flex justify-between items-center gap-2">
@@ -83,8 +83,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             )}
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 px-6 py-2 space-y-2">
+          {/* Navigation - scrollable if needed */}
+          <nav className="flex-1 px-6 py-2 space-y-2 overflow-y-auto min-h-0">
             {menuItems.map((item) => {
               const isActive = pathname === item.path;
               return (
