@@ -81,21 +81,24 @@ export default function LoginPage() {
       </div>
 
       {/* Right Panel - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-start lg:items-center justify-center p-4 pt-4 lg:p-6 xl:p-12 overflow-y-auto">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-6 xl:p-12 overflow-y-auto">
         <div className="w-full max-w-md animate-fade-in">
           {/* Mobile Logo */}
-          <div className="lg:hidden text-center mb-3">
+          <div className="lg:hidden text-center mb-8">
             <Image
               src="/login-art.png"
               alt="IT Controller"
-              width={80}
-              height={80}
-              className="mx-auto"
+              width={120}
+              height={120}
+              className="mx-auto mb-4"
             />
+            <h2 className="text-sm font-black text-gray-400 uppercase tracking-widest">
+              IT Controller
+            </h2>
           </div>
 
-          <div className="mb-4 lg:mb-6">
-            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-black text-black dark:text-white tracking-tight mb-1">
+          <div className="mb-6 lg:mb-6">
+            <h1 className="text-3xl lg:text-3xl xl:text-4xl font-black text-black dark:text-white tracking-tight mb-2">
               Bienvenido
             </h1>
             <p className="text-gray-400 dark:text-gray-500 font-medium text-sm lg:text-base">
@@ -109,7 +112,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">
                 Usuario
@@ -131,7 +134,7 @@ export default function LoginPage() {
                     if (error) setError("");
                   }}
                   disabled={isSubmitting}
-                  className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-lg py-3 pl-12 pr-4 text-black dark:text-white font-medium outline-none transition-all ${
+                  className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-xl py-4 pl-12 pr-4 text-black dark:text-white font-medium outline-none transition-all ${
                     error && !username
                       ? "border-red-500 placeholder:text-red-400 animate-shake"
                       : "border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white"
@@ -161,7 +164,7 @@ export default function LoginPage() {
                     if (error) setError("");
                   }}
                   disabled={isSubmitting}
-                  className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-lg py-3 pl-12 pr-4 text-black dark:text-white font-medium outline-none transition-all ${
+                  className={`w-full bg-gray-50 dark:bg-gray-900 border-2 rounded-xl py-4 pl-12 pr-4 text-black dark:text-white font-medium outline-none transition-all ${
                     error && !password
                       ? "border-red-500 placeholder:text-red-400 animate-shake"
                       : "border-gray-100 dark:border-gray-800 focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white"
@@ -173,7 +176,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-black dark:bg-white text-white dark:text-black font-black py-3.5 rounded-lg flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:scale-100 mt-6"
+              className="w-full bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:scale-100 mt-8"
             >
               {isSubmitting ? "ENTRANDO..." : "INICIAR SESIÓN"}
               {!isSubmitting && <FiArrowRight />}
