@@ -171,61 +171,64 @@ export default function NovedadesPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {actividades.map((actividad, idx) => (
-              <div
-                key={actividad.id}
-                className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-sm hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700 transition-all animate-slide-up"
-                style={{ animationDelay: `${idx * 50}ms` }}
-              >
-                {/* Header */}
-                <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-gray-100 dark:border-gray-800">
-                  <span
-                    className={`text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wider inline-flex items-center gap-1.5 ${getActivityColor(
-                      actividad.tipo
-                    )}`}
-                  >
-                    {getActivityIcon(actividad.tipo)}
-                    {getActivityLabel(actividad.tipo)}
-                  </span>
-                  <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-                    {formatDate(actividad.fechaCreacion)}
-                  </span>
-                </div>
+          <div className="relative">
+            {/* Línea de tiempo solo en escritorio */}
+            <div className="hidden md:block absolute left-3 top-0 h-full w-[2px] bg-gray-200 dark:bg-gray-800" aria-hidden />
 
-                {/* Content */}
-                {actividad.tipo === "ComentarioAgregado" ? (
-                  <div className="space-y-3">
-                    {actividad.referenciaInfo && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">
-                          En:
+            <div className="space-y-6">
+              {actividades.map((actividad, idx) => {
+                const isComment = actividad.tipo === "ComentarioAgregado";
+
+                return (
+                  <div
+                    key={actividad.id}
+                    className="relative md:pl-12 animate-slide-up"
+                    style={{ animationDelay: `${idx * 50}ms` }}
+                  >
+                    {/* Punto de la línea */}
+                    <div className="hidden md:block absolute left-1 top-9 w-4 h-4 rounded-full bg-white dark:bg-gray-900 border-[3px] border-black dark:border-white shadow" aria-hidden />
+
+                    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-all">
+                      {/* Header */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-100 dark:border-gray-800">
+                        <span
+                          className={`text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wider inline-flex items-center gap-1.5 ${getActivityColor(
+                            actividad.tipo
+                          )}`}
+                        >
+                          {getActivityIcon(actividad.tipo)}
+                          {getActivityLabel(actividad.tipo)}
                         </span>
-                        <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                          {actividad.referenciaInfo}
-                        </h3>
+                        <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
+                          {formatDate(actividad.fechaCreacion)}
+                        </span>
                       </div>
-                    )}
-                    <div className="bg-gray-50 dark:bg-gray-800/50 border-l-4 border-purple-500 p-4 rounded-r-lg">
-                      <p className="text-gray-900 dark:text-gray-100 font-medium text-base leading-relaxed break-words">
-                        {actividad.descripcion}
-                      </p>
+
+                      {/* Content */}
+                      <div className="space-y-3">
+                        {actividad.referenciaInfo && (
+                          <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 leading-relaxed break-words whitespace-pre-wrap">
+                            {actividad.referenciaInfo}
+                          </h3>
+                        )}
+
+                        {isComment ? (
+                          <div className="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded-r-lg">
+                            <p className="text-gray-900 dark:text-gray-100 font-medium text-sm leading-relaxed break-words whitespace-pre-wrap">
+                              {actividad.descripcion}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-gray-700 dark:text-gray-300 font-medium text-sm leading-relaxed break-words whitespace-pre-wrap">
+                            {actividad.descripcion}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="space-y-2">
-                    {actividad.referenciaInfo && (
-                      <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 leading-relaxed break-words">
-                        {actividad.referenciaInfo}
-                      </h3>
-                    )}
-                    <p className="text-gray-700 dark:text-gray-300 font-medium text-sm leading-relaxed break-words">
-                      {actividad.descripcion}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
