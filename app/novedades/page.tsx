@@ -136,6 +136,36 @@ export default function NovedadesPage() {
     return date.toLocaleDateString();
   };
 
+  const groupActividades = () => {
+    const groups: { [key: string]: Actividad[] } = {
+      Hoy: [],
+      Ayer: [],
+      Anterior: [],
+    };
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    actividades.forEach((act) => {
+      const actDate = new Date(act.fechaCreacion);
+      const d = new Date(actDate.getFullYear(), actDate.getMonth(), actDate.getDate());
+
+      if (d.getTime() === today.getTime()) {
+        groups["Hoy"].push(act);
+      } else if (d.getTime() === yesterday.getTime()) {
+        groups["Ayer"].push(act);
+      } else {
+        groups["Anterior"].push(act);
+      }
+    });
+
+    return groups;
+  };
+
+  const grouped = groupActividades();
+
   return (
     <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in relative z-10">
       {/* Header */}
@@ -147,12 +177,12 @@ export default function NovedadesPage() {
           <FiMenu size={20} />
         </button>
         <h1 className="text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase flex items-center gap-3">
-          NOVEDADES
+          NOVEDADES IT
         </h1>
       </header>
 
       {/* Feed */}
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-12">
         {loading ? (
           <div className="text-center py-20">
             <div className="w-8 h-8 border-4 border-gray-200 border-t-black dark:border-gray-800 dark:border-t-white rounded-full animate-spin mx-auto" />
@@ -161,81 +191,82 @@ export default function NovedadesPage() {
             </p>
           </div>
         ) : actividades.length === 0 ? (
-          <div className="text-center py-20 bg-white dark:bg-gray-900 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+          <div className="text-center py-20 bg-white dark:bg-gray-900 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-[32px]">
             <FiActivity
               size={48}
               className="mx-auto text-gray-300 dark:text-gray-700 mb-4"
             />
-            <p className="text-gray-400 font-bold">
+            <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
               No hay actividad reciente.
             </p>
           </div>
         ) : (
-          <div className="relative">
-            {/* Línea de tiempo solo en escritorio */}
-            <div
-              className="hidden md:block absolute left-3 top-0 h-full w-[2px] bg-gray-200 dark:bg-gray-800"
-              aria-hidden
-            />
+          Object.entries(grouped).map(([title, items]) => {
+            if (items.length === 0) return null;
 
-            <div className="space-y-6">
-              {actividades.map((actividad, idx) => {
-                const isComment = actividad.tipo === "ComentarioAgregado";
+            return (
+              <section key={title} className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-sm font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.3em] whitespace-nowrap">
+                    {title}
+                  </h2>
+                  <div className="h-px w-full bg-gray-100 dark:border-gray-800" />
+                </div>
 
-                return (
-                  <div
-                    key={actividad.id}
-                    className="relative md:pl-12 animate-slide-up"
-                    style={{ animationDelay: `${idx * 50}ms` }}
-                  >
-                    {/* Punto de la línea */}
-                    <div
-                      className="hidden md:block absolute left-1 top-9 w-4 h-4 rounded-full bg-white dark:bg-gray-900 border-[3px] border-black dark:border-white shadow"
-                      aria-hidden
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {items.map((actividad, idx) => {
+                    const isComment = actividad.tipo === "ComentarioAgregado";
 
-                    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-all">
-                      {/* Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-100 dark:border-gray-800">
-                        <span
-                          className={`text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wider inline-flex items-center gap-1.5 ${getActivityColor(
-                            actividad.tipo
-                          )}`}
-                        >
-                          {getActivityIcon(actividad.tipo)}
-                          {getActivityLabel(actividad.tipo)}
-                        </span>
-                        <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
-                          {formatDate(actividad.fechaCreacion)}
-                        </span>
-                      </div>
-
-                      {/* Content */}
-                      <div className="space-y-3">
-                        {actividad.referenciaInfo && (
-                          <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 leading-relaxed break-words whitespace-pre-wrap">
-                            {actividad.referenciaInfo}
-                          </h3>
-                        )}
-
-                        {isComment ? (
-                          <div className="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded-r-lg">
-                            <p className="text-gray-900 dark:text-gray-100 font-medium text-sm leading-relaxed break-words whitespace-pre-wrap">
-                              {actividad.descripcion}
-                            </p>
+                    return (
+                      <div
+                        key={actividad.id}
+                        className="animate-slide-up"
+                        style={{ animationDelay: `${idx * 50}ms` }}
+                      >
+                        <div className="bg-white dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-800 rounded-[24px] p-6 hover:border-black dark:hover:border-white transition-all shadow-sm group">
+                          {/* Header */}
+                          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-50 dark:border-gray-800">
+                            <span
+                              className={`text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wider inline-flex items-center gap-2 ${getActivityColor(
+                                actividad.tipo
+                              )}`}
+                            >
+                              {getActivityIcon(actividad.tipo)}
+                              {getActivityLabel(actividad.tipo)}
+                            </span>
+                            <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">
+                              {formatDate(actividad.fechaCreacion)}
+                            </span>
                           </div>
-                        ) : (
-                          <p className="text-gray-700 dark:text-gray-300 font-medium text-sm leading-relaxed break-words whitespace-pre-wrap">
-                            {actividad.descripcion}
-                          </p>
-                        )}
+
+                          {/* Content */}
+                          <div className="space-y-3">
+                            {actividad.referenciaInfo && (
+                              <h3 className="text-lg font-black text-black dark:text-white uppercase tracking-tight leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                                {actividad.referenciaInfo}
+                              </h3>
+                            )}
+
+                            {isComment ? (
+                              <div className="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded-r-xl">
+                                <p className="text-gray-600 dark:text-gray-300 font-bold text-sm leading-relaxed">
+                                  {actividad.descripcion}
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="text-gray-500 dark:text-gray-400 font-bold text-sm leading-relaxed">
+                                {actividad.descripcion}
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })
         )}
       </div>
     </div>
