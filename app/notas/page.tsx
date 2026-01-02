@@ -209,14 +209,33 @@ export default function NotasPage() {
                  </div>
               </div>
               <h3 className="text-2xl font-black text-black dark:text-white uppercase mb-3 tracking-tight leading-tight">{nota.titulo}</h3>
-              <div className="flex-1 flex items-center justify-center">
-                 {/* Content hidden for cleaner look */}
+              
+              {/* Extracto del contenido */}
+              <div className="flex-1 overflow-hidden mb-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 leading-relaxed">
+                  {nota.contenido.substring(0, 120)}{nota.contenido.length > 120 ? '...' : ''}
+                </p>
               </div>
-              <div className="mt-4 pt-6 border-t border-gray-50 dark:border-gray-800 flex justify-between items-center text-[10px] font-black text-gray-200 dark:text-gray-600 uppercase tracking-[0.2em]">
-                <span>#{nota.id}</span>
-                <span className="text-gray-300 dark:text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors flex items-center gap-2">
+
+              {/* Fecha de creación */}
+              <div className="mb-4 flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+                <FiClock size={14} />
+                <span className="font-semibold">
+                  {new Date(nota.fechaCreacion).toLocaleDateString('es-ES', { 
+                    day: '2-digit', 
+                    month: 'short', 
+                    year: 'numeric' 
+                  })}
+                </span>
+              </div>
+
+              <div className="mt-auto pt-4 border-t border-gray-50 dark:border-gray-800 flex justify-between items-center text-[10px] font-black text-gray-200 dark:text-gray-600 uppercase tracking-[0.2em]">
+                <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-current"></span>
                   {TaskCategory[nota.categoria]}
+                </span>
+                <span className="text-gray-300 dark:text-gray-500">
+                  {nota.contenido.length} caracteres
                 </span>
               </div>
             </div>

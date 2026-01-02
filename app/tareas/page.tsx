@@ -13,36 +13,40 @@ import {
   FiWifi,
   FiFileText,
   FiTool,
+  FiSearch,
+  FiFilter,
+  FiX,
+  FiAlertCircle,
+  FiCalendar,
 } from "react-icons/fi";
 import {
   Tarea,
   TaskStatus,
   TaskCategory,
+  TaskPriority,
   CATEGORIES,
+  PRIORITIES,
   detectCategory,
-} from "../types/task";
-import { apiFetch } from "../lib/api";
-import { ENDPOINTS } from "../lib/config";
-import { TaskModal } from "../components/TaskModal";
-import { useSidebar } from "../context/SidebarContext";
+} from "../../types/task";
+import { apiFetch } from "../../lib/api";
+import { ENDPOINTS } from "../../lib/config";
+import { TaskModal } from "../../components/TaskModal";
+import { useSidebar } from "../../context/SidebarContext";
 import { useAuth } from "../context/AuthContext";
 
 export default function TareasPage() {
-  const router = useRouter();
   const { openSidebar } = useSidebar();
-  const { isAuthenticated, loading: authLoading } = useAuth();
-
-  // Redirigir a novedades al cargar (solo si está autenticado)
-  useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      router.push("/novedades");
-    }
-  }, [router, isAuthenticated, authLoading]);
 
   const [tareas, setTareas] = useState<Tarea[]>([]);
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState<Tarea | null>(null);
+  
+  // Filtros y búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState<TaskCategory | "Todas">("Todas");
+  const [filtroPrioridad, setFiltroPrioridad] = useState<TaskPriority | "Todas">("Todas");
+  const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
   const COLUMNS = [
     { id: "Pendiente", label: "PENDIENTE", color: "bg-gray-100 text-gray-500" },
@@ -77,6 +81,10 @@ export default function TareasPage() {
                   "Mantenimiento",
                 ][t.categoria]
               : t.categoria || "Hardware",
+          prioridad:
+            typeof t.prioridad === "number"
+              ? ["Baja", "Media", "Alta", "Urgente"][t.prioridad]
+              : t.prioridad || "Media",
         }));
         setTareas(mappedData);
       }
@@ -115,10 +123,11 @@ export default function TareasPage() {
 
       const resp = await apiFetch(ENDPOINTS.tareas, {
         method: "POST",
-        body: JSON.stringify({
-          titulo: nuevaTarea,
-          estado: 0,
+        body: JSON.stringify({ 
+          titulo: nuevaTarea, 
+          estado: 0, 
           categoria: categoriaEnum,
+          prioridad: 1 // Media por defecto
         }),
       });
       if (resp.ok) {
@@ -216,10 +225,16 @@ export default function TareasPage() {
           ].indexOf(updatedTarea.categoria as string)
         : 0;
 
+      // Convert priority string to enum int
+      let prioridadEnum = updatedTarea.prioridad
+        ? ["Baja", "Media", "Alta", "Urgente"].indexOf(updatedTarea.prioridad as string)
+        : 1;
+
       const payload = {
         ...updatedTarea,
         estado: estadoEnum,
         categoria: categoriaEnum,
+        prioridad: prioridadEnum,
       };
 
       const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
@@ -256,45 +271,147 @@ export default function TareasPage() {
     }
   };
 
+  // Función para filtrar tareas
+  const tareasFiltradas = tareas.filter((tarea) => {
+    // Filtro de búsqueda
+    const matchSearch = searchTerm === "" || 
+      tarea.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (tarea.descripcion && tarea.descripcion.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    // Filtro de categoría
+    const matchCategoria = filtroCategoria === "Todas" || tarea.categoria === filtroCategoria;
+    
+    // Filtro de prioridad
+    const matchPrioridad = filtroPrioridad === "Todas" || tarea.prioridad === filtroPrioridad;
+    
+    return matchSearch && matchCategoria && matchPrioridad;
+  });
+
   if (loading) return null;
 
   return (
     <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in h-dvh flex flex-col">
-      <header className="mb-6 lg:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={openSidebar}
-            className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg active:scale-90 transition-transform"
-          >
-            <FiMenu size={20} />
-          </button>
-          <h1 className="text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">
-            IT TASKS
-          </h1>
+      <header className="mb-6 lg:mb-8 flex flex-col gap-4">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={openSidebar}
+              className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg active:scale-90 transition-transform"
+            >
+              <FiMenu size={20} />
+            </button>
+            <h1 className="text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase">
+              IT TASKS
+            </h1>
+          </div>
+          <div className="flex gap-2 w-full lg:w-auto items-center">
+            <input
+              type="text"
+              value={nuevaTarea}
+              onChange={(e) => {
+                setNuevaTarea(e.target.value);
+                if (error) setError(false);
+              }}
+              placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
+              onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
+              className={`bg-gray-50 dark:bg-gray-900 border-2 rounded-lg px-3 py-2 text-black dark:text-white font-bold outline-none flex-1 lg:w-64 transition-all text-sm ${
+                error
+                  ? "border-red-500 placeholder:text-red-400 animate-shake"
+                  : "border-gray-100 dark:border-gray-800 focus:border-black dark:focus:border-white"
+              }`}
+            />
+            <button
+              onClick={agregarTarea}
+              className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg hover:scale-105 active:scale-95 transition-all shrink-0"
+            >
+              <FiPlus size={20} />
+            </button>
+          </div>
         </div>
-        <div className="flex gap-2 w-full lg:w-auto items-center">
-          <input
-            type="text"
-            value={nuevaTarea}
-            onChange={(e) => {
-              setNuevaTarea(e.target.value);
-              if (error) setError(false);
-            }}
-            placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
-            onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
-            className={`bg-gray-50 dark:bg-gray-900 border-2 rounded-lg px-3 py-2 text-black dark:text-white font-bold outline-none flex-1 lg:w-64 transition-all text-sm ${
-              error
-                ? "border-red-500 placeholder:text-red-400 animate-shake"
-                : "border-gray-100 dark:border-gray-800 focus:border-black dark:focus:border-white"
+
+        {/* Búsqueda y Filtros */}
+        <div className="flex flex-col lg:flex-row gap-3">
+          {/* Búsqueda */}
+          <div className="relative flex-1">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar tareas..."
+              className="w-full bg-gray-50 dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-800 rounded-lg pl-10 pr-4 py-2 text-sm font-bold outline-none focus:border-black dark:focus:border-white transition-all"
+            />
+          </div>
+
+          {/* Botón de filtros */}
+          <button
+            onClick={() => setMostrarFiltros(!mostrarFiltros)}
+            className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+              mostrarFiltros || filtroCategoria !== "Todas" || filtroPrioridad !== "Todas"
+                ? "bg-black dark:bg-white text-white dark:text-black"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
             }`}
-          />
-          <button
-            onClick={agregarTarea}
-            className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg hover:scale-105 active:scale-95 transition-all shrink-0"
           >
-            <FiPlus size={20} />
+            <FiFilter size={16} />
+            Filtros
+            {(filtroCategoria !== "Todas" || filtroPrioridad !== "Todas") && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-black shadow-lg animate-bounce">
+                {(filtroCategoria !== "Todas" ? 1 : 0) + (filtroPrioridad !== "Todas" ? 1 : 0)}
+              </span>
+            )}
           </button>
         </div>
+
+        {/* Panel de filtros */}
+        {mostrarFiltros && (
+          <div className="bg-gray-50 dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-800 rounded-lg p-4 animate-scale-up">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Filtro de Categoría */}
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">Categoría</label>
+                <select
+                  value={filtroCategoria}
+                  onChange={(e) => setFiltroCategoria(e.target.value as TaskCategory | "Todas")}
+                  className="w-full bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-lg p-2 text-sm font-bold outline-none focus:border-black dark:focus:border-white transition-all"
+                >
+                  <option value="Todas">Todas</option>
+                  {Object.keys(CATEGORIES).map((cat) => (
+                    <option key={cat} value={cat}>{CATEGORIES[cat as TaskCategory].label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Filtro de Prioridad */}
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">Prioridad</label>
+                <select
+                  value={filtroPrioridad}
+                  onChange={(e) => setFiltroPrioridad(e.target.value as TaskPriority | "Todas")}
+                  className="w-full bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-lg p-2 text-sm font-bold outline-none focus:border-black dark:focus:border-white transition-all"
+                >
+                  <option value="Todas">Todas</option>
+                  {Object.keys(PRIORITIES).map((pri) => (
+                    <option key={pri} value={pri}>{PRIORITIES[pri as TaskPriority].label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Limpiar filtros */}
+            {(filtroCategoria !== "Todas" || filtroPrioridad !== "Todas") && (
+              <button
+                onClick={() => {
+                  setFiltroCategoria("Todas");
+                  setFiltroPrioridad("Todas");
+                }}
+                className="mt-3 text-xs font-bold text-gray-500 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1"
+              >
+                <FiX size={14} />
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+        )}
       </header>
 
       {/* Kanban Board */}
@@ -319,21 +436,21 @@ export default function TareasPage() {
                   {col.label}
                 </h2>
                 <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-3 py-1 rounded-full text-[10px] font-bold">
-                  {tareas.filter((t) => t.estado === col.id).length}
+                  {tareasFiltradas.filter((t) => t.estado === col.id).length}
                 </span>
               </div>
 
               {/* Tasks Container */}
               <div className="p-4 space-y-3 lg:overflow-y-auto flex-1 custom-scrollbar">
-                {tareas.filter((t) => t.estado === col.id).length === 0 && (
+                {tareasFiltradas.filter((t) => t.estado === col.id).length === 0 && (
                   <div className="text-center py-10 opacity-30">
                     <p className="text-xs font-bold uppercase text-gray-400">
-                      Vacío
+                      {searchTerm || filtroCategoria !== "Todas" || filtroPrioridad !== "Todas" ? "Sin resultados" : "Vacío"}
                     </p>
                   </div>
                 )}
 
-                {tareas
+                {tareasFiltradas
                   .filter((t) => t.estado === col.id)
                   .map((t) => (
                     <div
@@ -354,6 +471,43 @@ export default function TareasPage() {
                           </p>
                         </div>
                       )}
+
+                      {/* Prioridad y Fecha de vencimiento */}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {/* Prioridad */}
+                        {t.prioridad && (
+                          <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 ${PRIORITIES[t.prioridad].badgeColor}`}>
+                            <FiAlertCircle size={10} />
+                            {PRIORITIES[t.prioridad].label}
+                          </span>
+                        )}
+                        
+                        {/* Fecha de vencimiento */}
+                        {t.fechaVencimiento && (() => {
+                          const hoy = new Date();
+                          hoy.setHours(0, 0, 0, 0);
+                          const vencimiento = new Date(t.fechaVencimiento);
+                          vencimiento.setHours(0, 0, 0, 0);
+                          const diffDias = Math.ceil((vencimiento.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
+                          const esVencida = diffDias < 0;
+                          const esHoy = diffDias === 0;
+                          const esManana = diffDias === 1;
+                          const esProxima = diffDias > 1 && diffDias <= 3;
+                          
+                          return (
+                            <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 shadow-sm ${
+                              esVencida ? 'bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse' :
+                              esHoy ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white' :
+                              esManana ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white' :
+                              esProxima ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                              'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            }`}>
+                              <FiCalendar size={10} />
+                              {esVencida ? '¡Vencida!' : esHoy ? 'Hoy' : esManana ? 'Mañana' : `${diffDias}d`}
+                            </span>
+                          );
+                        })()}
+                      </div>
 
                       <div className="flex justify-between items-center mt-2">
                         <div className="flex items-center gap-2">

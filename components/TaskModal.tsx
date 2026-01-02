@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { FiX, FiTrash2, FiSave, FiClock, FiAlignLeft, FiTag, FiMonitor, FiCode, FiWifi, FiFileText, FiTool, FiMessageSquare, FiSend } from "react-icons/fi";
-import { Tarea, TaskStatus, TaskCategory, CATEGORIES } from "../types/task";
+import { FiX, FiTrash2, FiSave, FiClock, FiAlignLeft, FiTag, FiMonitor, FiCode, FiWifi, FiFileText, FiTool, FiMessageSquare, FiSend, FiAlertCircle, FiCalendar } from "react-icons/fi";
+import { Tarea, TaskStatus, TaskCategory, TaskPriority, CATEGORIES, PRIORITIES } from "../types/task";
 import { Comentario } from "../types/comment";
 import { apiFetch } from "../lib/api";
 
@@ -24,6 +24,8 @@ export const TaskModal = ({
   const [descripcion, setDescripcion] = useState(task.descripcion || "");
   const [estado, setEstado] = useState<TaskStatus>(task.estado);
   const [categoria, setCategoria] = useState<TaskCategory>(task.categoria || "Hardware");
+  const [prioridad, setPrioridad] = useState<TaskPriority>(task.prioridad || "Media");
+  const [fechaVencimiento, setFechaVencimiento] = useState(task.fechaVencimiento || "");
   const [loading, setLoading] = useState(false);
   
   // Comments State
@@ -37,6 +39,8 @@ export const TaskModal = ({
     setDescripcion(task.descripcion || "");
     setEstado(task.estado);
     setCategoria(task.categoria || "Hardware");
+    setPrioridad(task.prioridad || "Media");
+    setFechaVencimiento(task.fechaVencimiento || "");
     if (task.id) {
         fetchComentarios(task.id);
     }
@@ -77,7 +81,14 @@ export const TaskModal = ({
 
   const handleSave = async () => {
     setLoading(true);
-    await onSave(task.id!, { titulo, descripcion, estado, categoria });
+    await onSave(task.id!, { 
+      titulo, 
+      descripcion, 
+      estado, 
+      categoria,
+      prioridad,
+      fechaVencimiento: fechaVencimiento || undefined
+    });
     setLoading(false);
     onClose();
   };
@@ -183,6 +194,40 @@ export const TaskModal = ({
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                   <span className="text-xs">▼</span>
                 </div>
+              </div>
+            </div>
+
+            {/* Priority and Due Date */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Priority */}
+              <div className="space-y-3">
+                <label className="flex items-center gap-2 text-xs font-black uppercase text-gray-300 dark:text-gray-600 tracking-widest ml-1">
+                  <FiAlertCircle /> Prioridad
+                </label>
+                <select
+                  value={prioridad}
+                  onChange={(e) => setPrioridad(e.target.value as TaskPriority)}
+                  className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-sm font-bold outline-none cursor-pointer text-black dark:text-white appearance-none border-2 border-transparent focus:border-black dark:focus:border-white transition-all"
+                >
+                  {Object.entries(PRIORITIES).map(([key, config]) => (
+                    <option key={key} value={key}>
+                      {config.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Due Date */}
+              <div className="space-y-3">
+                <label className="flex items-center gap-2 text-xs font-black uppercase text-gray-300 dark:text-gray-600 tracking-widest ml-1">
+                  <FiCalendar /> Vencimiento
+                </label>
+                <input
+                  type="date"
+                  value={fechaVencimiento ? new Date(fechaVencimiento).toISOString().split('T')[0] : ''}
+                  onChange={(e) => setFechaVencimiento(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                  className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-sm font-bold outline-none text-black dark:text-white border-2 border-transparent focus:border-black dark:focus:border-white transition-all"
+                />
               </div>
             </div>
           </div>

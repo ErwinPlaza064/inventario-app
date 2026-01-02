@@ -2,14 +2,42 @@ export type TaskStatus = "Pendiente" | "EnProceso" | "Completada";
 
 export type TaskCategory = "Hardware" | "Software" | "Redes" | "Documentacion" | "Mantenimiento";
 
+export type TaskPriority = "Baja" | "Media" | "Alta" | "Urgente";
+
 export interface Tarea {
   id?: number;
   titulo: string;
   descripcion?: string;
   estado: TaskStatus;
   categoria?: TaskCategory;
+  prioridad?: TaskPriority;
+  fechaVencimiento?: string;
   fechaCreacion?: string;
 }
+
+// Configuración de prioridades con colores
+export const PRIORITIES: Record<TaskPriority, { label: string; color: string; badgeColor: string }> = {
+  Baja: { 
+    label: "Baja", 
+    color: "text-gray-600 dark:text-gray-400", 
+    badgeColor: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300" 
+  },
+  Media: { 
+    label: "Media", 
+    color: "text-blue-600 dark:text-blue-400", 
+    badgeColor: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" 
+  },
+  Alta: { 
+    label: "Alta", 
+    color: "text-orange-600 dark:text-orange-400", 
+    badgeColor: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" 
+  },
+  Urgente: { 
+    label: "Urgente", 
+    color: "text-red-600 dark:text-red-400", 
+    badgeColor: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" 
+  },
+};
 
 // Configuración de categorías con iconos y colores
 // iconName se usa para renderizar el ícono de react-icons en el componente
