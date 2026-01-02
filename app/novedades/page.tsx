@@ -173,7 +173,10 @@ export default function NovedadesPage() {
         ) : (
           <div className="relative">
             {/* Línea de tiempo solo en escritorio */}
-            <div className="hidden md:block absolute left-3 top-0 h-full w-[2px] bg-gray-200 dark:bg-gray-800" aria-hidden />
+            <div
+              className="hidden md:block absolute left-3 top-0 h-full w-[2px] bg-gray-200 dark:bg-gray-800"
+              aria-hidden
+            />
 
             <div className="space-y-6">
               {actividades.map((actividad, idx) => {
@@ -186,7 +189,10 @@ export default function NovedadesPage() {
                     style={{ animationDelay: `${idx * 50}ms` }}
                   >
                     {/* Punto de la línea */}
-                    <div className="hidden md:block absolute left-1 top-9 w-4 h-4 rounded-full bg-white dark:bg-gray-900 border-[3px] border-black dark:border-white shadow" aria-hidden />
+                    <div
+                      className="hidden md:block absolute left-1 top-9 w-4 h-4 rounded-full bg-white dark:bg-gray-900 border-[3px] border-black dark:border-white shadow"
+                      aria-hidden
+                    />
 
                     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-all">
                       {/* Header */}
