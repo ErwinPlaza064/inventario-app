@@ -171,56 +171,59 @@ export default function NovedadesPage() {
             </p>
           </div>
         ) : (
-          <div className="relative border-l-2 border-gray-200 dark:border-gray-800 ml-4 lg:ml-8 space-y-6 pl-8 lg:pl-12 py-4">
+          <div className="space-y-4">
             {actividades.map((actividad, idx) => (
               <div
                 key={actividad.id}
-                className="relative animate-slide-up"
+                className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-sm hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700 transition-all animate-slide-up"
                 style={{ animationDelay: `${idx * 50}ms` }}
               >
-                {/* Timeline Dot */}
-                <div className="absolute -left-[41px] lg:-left-[59px] top-6 w-5 h-5 rounded-full bg-white dark:bg-gray-900 border-4 border-black dark:border-white shadow-sm z-10"></div>
-
-                {/* Card */}
-                <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-5 rounded-lg shadow-sm hover:shadow-md transition-all group">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                    <span
-                      className={`text-xs font-black px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1 ${getActivityColor(
-                        actividad.tipo
-                      )}`}
-                    >
-                      {getActivityIcon(actividad.tipo)}
-                      {getActivityLabel(actividad.tipo)}
-                    </span>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">
-                      {formatDate(actividad.fechaCreacion)}
-                    </span>
-                  </div>
-
-                  {actividad.tipo === "ComentarioAgregado" ? (
-                    <div className="space-y-2">
-                      {actividad.referenciaInfo && (
-                        <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                          {actividad.referenciaInfo}
-                        </p>
-                      )}
-                      <p className="text-gray-900 dark:text-gray-100 font-semibold text-base">
-                        {actividad.descripcion}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      {actividad.referenciaInfo && (
-                        <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                          {actividad.referenciaInfo}
-                        </p>
-                      )}
-                      <p className="text-gray-900 dark:text-gray-100 font-semibold text-base">
-                        {actividad.descripcion}
-                      </p>
-                    </div>
-                  )}
+                {/* Header */}
+                <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-gray-100 dark:border-gray-800">
+                  <span
+                    className={`text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wider inline-flex items-center gap-1.5 ${getActivityColor(
+                      actividad.tipo
+                    )}`}
+                  >
+                    {getActivityIcon(actividad.tipo)}
+                    {getActivityLabel(actividad.tipo)}
+                  </span>
+                  <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
+                    {formatDate(actividad.fechaCreacion)}
+                  </span>
                 </div>
+
+                {/* Content */}
+                {actividad.tipo === "ComentarioAgregado" ? (
+                  <div className="space-y-3">
+                    {actividad.referenciaInfo && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">
+                          En:
+                        </span>
+                        <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                          {actividad.referenciaInfo}
+                        </h3>
+                      </div>
+                    )}
+                    <div className="bg-gray-50 dark:bg-gray-800/50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+                      <p className="text-gray-900 dark:text-gray-100 font-medium text-base leading-relaxed break-words">
+                        {actividad.descripcion}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {actividad.referenciaInfo && (
+                      <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 leading-relaxed break-words">
+                        {actividad.referenciaInfo}
+                      </h3>
+                    )}
+                    <p className="text-gray-700 dark:text-gray-300 font-medium text-sm leading-relaxed break-words">
+                      {actividad.descripcion}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
