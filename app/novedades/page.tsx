@@ -184,7 +184,7 @@ export default function NovedadesPage() {
                 {/* Card */}
                 <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-5 rounded-lg shadow-sm hover:shadow-md transition-all group">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span
                         className={`text-xs font-black px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1 ${getActivityColor(
                           actividad.tipo
@@ -193,32 +193,20 @@ export default function NovedadesPage() {
                         {getActivityIcon(actividad.tipo)}
                         {getActivityLabel(actividad.tipo)}
                       </span>
-                      {actividad.referenciaInfo &&
-                        actividad.tipo !== "ComentarioAgregado" && (
-                          <span className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-1 rounded">
-                            {actividad.referenciaInfo}
-                          </span>
-                        )}
+                      {actividad.referenciaInfo && (
+                        <span className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">
+                          {actividad.referenciaInfo}
+                        </span>
+                      )}
                     </div>
                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wide whitespace-nowrap">
                       {formatDate(actividad.fechaCreacion)}
                     </span>
                   </div>
 
-                  {actividad.tipo === "ComentarioAgregado" ? (
-                    <div className="space-y-2">
-                      <p className="text-gray-900 dark:text-gray-100 font-semibold text-base">
-                        {actividad.descripcion}
-                      </p>
-                      <p className="text-gray-600 dark:text-gray-400 font-medium text-sm">
-                        Comentario en: <span className="text-gray-900 dark:text-gray-100 font-bold">{actividad.referenciaInfo}</span>
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-gray-900 dark:text-gray-100 font-semibold text-base">
-                      {actividad.descripcion}
-                    </p>
-                  )}
+                  <p className="text-gray-900 dark:text-gray-100 font-semibold text-base">
+                    {actividad.descripcion}
+                  </p>
                 </div>
               </div>
             ))}
