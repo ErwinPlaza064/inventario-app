@@ -32,7 +32,7 @@ import { apiFetch } from "../../lib/api";
 import { ENDPOINTS } from "../../lib/config";
 import { TaskModal } from "../../components/TaskModal";
 import { useSidebar } from "../../context/SidebarContext";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function TareasPage() {
   const { openSidebar } = useSidebar();
