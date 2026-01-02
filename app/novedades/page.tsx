@@ -204,9 +204,22 @@ export default function NovedadesPage() {
                     </span>
                   </div>
 
-                  <p className="text-gray-900 dark:text-gray-100 font-semibold text-base">
-                    {actividad.descripcion}
-                  </p>
+                  {actividad.tipo === "ComentarioAgregado" ? (
+                    <div className="space-y-2">
+                      <p className="text-gray-600 dark:text-gray-400 font-medium text-sm">
+                        Comentario en: <span className="text-gray-900 dark:text-gray-100 font-bold">{actividad.referenciaInfo}</span>
+                      </p>
+                      <div className="bg-gray-50 dark:bg-gray-800 border-l-4 border-purple-500 p-3 rounded">
+                        <p className="text-gray-700 dark:text-gray-300 font-medium text-sm italic">
+                          "{actividad.descripcion}"
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-gray-900 dark:text-gray-100 font-semibold text-base">
+                      {actividad.descripcion}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
