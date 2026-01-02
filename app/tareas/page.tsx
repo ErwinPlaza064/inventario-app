@@ -41,11 +41,15 @@ export default function TareasPage() {
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState<Tarea | null>(null);
-  
+
   // Filtros y búsqueda
   const [searchTerm, setSearchTerm] = useState("");
-  const [filtroCategoria, setFiltroCategoria] = useState<TaskCategory | "Todas">("Todas");
-  const [filtroPrioridad, setFiltroPrioridad] = useState<TaskPriority | "Todas">("Todas");
+  const [filtroCategoria, setFiltroCategoria] = useState<
+    TaskCategory | "Todas"
+  >("Todas");
+  const [filtroPrioridad, setFiltroPrioridad] = useState<
+    TaskPriority | "Todas"
+  >("Todas");
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
   const COLUMNS = [
@@ -123,11 +127,11 @@ export default function TareasPage() {
 
       const resp = await apiFetch(ENDPOINTS.tareas, {
         method: "POST",
-        body: JSON.stringify({ 
-          titulo: nuevaTarea, 
-          estado: 0, 
+        body: JSON.stringify({
+          titulo: nuevaTarea,
+          estado: 0,
           categoria: categoriaEnum,
-          prioridad: 1 // Media por defecto
+          prioridad: 1, // Media por defecto
         }),
       });
       if (resp.ok) {
@@ -227,7 +231,9 @@ export default function TareasPage() {
 
       // Convert priority string to enum int
       let prioridadEnum = updatedTarea.prioridad
-        ? ["Baja", "Media", "Alta", "Urgente"].indexOf(updatedTarea.prioridad as string)
+        ? ["Baja", "Media", "Alta", "Urgente"].indexOf(
+            updatedTarea.prioridad as string
+          )
         : 1;
 
       const payload = {
@@ -274,16 +280,20 @@ export default function TareasPage() {
   // Función para filtrar tareas
   const tareasFiltradas = tareas.filter((tarea) => {
     // Filtro de búsqueda
-    const matchSearch = searchTerm === "" || 
+    const matchSearch =
+      searchTerm === "" ||
       tarea.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (tarea.descripcion && tarea.descripcion.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+      (tarea.descripcion &&
+        tarea.descripcion.toLowerCase().includes(searchTerm.toLowerCase()));
+
     // Filtro de categoría
-    const matchCategoria = filtroCategoria === "Todas" || tarea.categoria === filtroCategoria;
-    
+    const matchCategoria =
+      filtroCategoria === "Todas" || tarea.categoria === filtroCategoria;
+
     // Filtro de prioridad
-    const matchPrioridad = filtroPrioridad === "Todas" || tarea.prioridad === filtroPrioridad;
-    
+    const matchPrioridad =
+      filtroPrioridad === "Todas" || tarea.prioridad === filtroPrioridad;
+
     return matchSearch && matchCategoria && matchPrioridad;
   });
 
@@ -333,7 +343,10 @@ export default function TareasPage() {
         <div className="flex flex-col lg:flex-row gap-3">
           {/* Búsqueda */}
           <div className="relative flex-1">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <FiSearch
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <input
               type="text"
               value={searchTerm}
@@ -347,7 +360,9 @@ export default function TareasPage() {
           <button
             onClick={() => setMostrarFiltros(!mostrarFiltros)}
             className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-              mostrarFiltros || filtroCategoria !== "Todas" || filtroPrioridad !== "Todas"
+              mostrarFiltros ||
+              filtroCategoria !== "Todas" ||
+              filtroPrioridad !== "Todas"
                 ? "bg-black dark:bg-white text-white dark:text-black"
                 : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
             }`}
@@ -356,7 +371,8 @@ export default function TareasPage() {
             Filtros
             {(filtroCategoria !== "Todas" || filtroPrioridad !== "Todas") && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-black shadow-lg animate-bounce">
-                {(filtroCategoria !== "Todas" ? 1 : 0) + (filtroPrioridad !== "Todas" ? 1 : 0)}
+                {(filtroCategoria !== "Todas" ? 1 : 0) +
+                  (filtroPrioridad !== "Todas" ? 1 : 0)}
               </span>
             )}
           </button>
@@ -368,30 +384,42 @@ export default function TareasPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Filtro de Categoría */}
               <div>
-                <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">Categoría</label>
+                <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">
+                  Categoría
+                </label>
                 <select
                   value={filtroCategoria}
-                  onChange={(e) => setFiltroCategoria(e.target.value as TaskCategory | "Todas")}
+                  onChange={(e) =>
+                    setFiltroCategoria(e.target.value as TaskCategory | "Todas")
+                  }
                   className="w-full bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-lg p-2 text-sm font-bold outline-none focus:border-black dark:focus:border-white transition-all"
                 >
                   <option value="Todas">Todas</option>
                   {Object.keys(CATEGORIES).map((cat) => (
-                    <option key={cat} value={cat}>{CATEGORIES[cat as TaskCategory].label}</option>
+                    <option key={cat} value={cat}>
+                      {CATEGORIES[cat as TaskCategory].label}
+                    </option>
                   ))}
                 </select>
               </div>
 
               {/* Filtro de Prioridad */}
               <div>
-                <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">Prioridad</label>
+                <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">
+                  Prioridad
+                </label>
                 <select
                   value={filtroPrioridad}
-                  onChange={(e) => setFiltroPrioridad(e.target.value as TaskPriority | "Todas")}
+                  onChange={(e) =>
+                    setFiltroPrioridad(e.target.value as TaskPriority | "Todas")
+                  }
                   className="w-full bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-lg p-2 text-sm font-bold outline-none focus:border-black dark:focus:border-white transition-all"
                 >
                   <option value="Todas">Todas</option>
                   {Object.keys(PRIORITIES).map((pri) => (
-                    <option key={pri} value={pri}>{PRIORITIES[pri as TaskPriority].label}</option>
+                    <option key={pri} value={pri}>
+                      {PRIORITIES[pri as TaskPriority].label}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -442,10 +470,15 @@ export default function TareasPage() {
 
               {/* Tasks Container */}
               <div className="p-4 space-y-3 lg:overflow-y-auto flex-1 custom-scrollbar">
-                {tareasFiltradas.filter((t) => t.estado === col.id).length === 0 && (
+                {tareasFiltradas.filter((t) => t.estado === col.id).length ===
+                  0 && (
                   <div className="text-center py-10 opacity-30">
                     <p className="text-xs font-bold uppercase text-gray-400">
-                      {searchTerm || filtroCategoria !== "Todas" || filtroPrioridad !== "Todas" ? "Sin resultados" : "Vacío"}
+                      {searchTerm ||
+                      filtroCategoria !== "Todas" ||
+                      filtroPrioridad !== "Todas"
+                        ? "Sin resultados"
+                        : "Vacío"}
                     </p>
                   </div>
                 )}
@@ -476,37 +509,57 @@ export default function TareasPage() {
                       <div className="flex flex-wrap gap-2 mb-3">
                         {/* Prioridad */}
                         {t.prioridad && (
-                          <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 ${PRIORITIES[t.prioridad].badgeColor}`}>
+                          <span
+                            className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 ${
+                              PRIORITIES[t.prioridad].badgeColor
+                            }`}
+                          >
                             <FiAlertCircle size={10} />
                             {PRIORITIES[t.prioridad].label}
                           </span>
                         )}
-                        
+
                         {/* Fecha de vencimiento */}
-                        {t.fechaVencimiento && (() => {
-                          const hoy = new Date();
-                          hoy.setHours(0, 0, 0, 0);
-                          const vencimiento = new Date(t.fechaVencimiento);
-                          vencimiento.setHours(0, 0, 0, 0);
-                          const diffDias = Math.ceil((vencimiento.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
-                          const esVencida = diffDias < 0;
-                          const esHoy = diffDias === 0;
-                          const esManana = diffDias === 1;
-                          const esProxima = diffDias > 1 && diffDias <= 3;
-                          
-                          return (
-                            <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 shadow-sm ${
-                              esVencida ? 'bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse' :
-                              esHoy ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white' :
-                              esManana ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white' :
-                              esProxima ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                              'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
-                            }`}>
-                              <FiCalendar size={10} />
-                              {esVencida ? '¡Vencida!' : esHoy ? 'Hoy' : esManana ? 'Mañana' : `${diffDias}d`}
-                            </span>
-                          );
-                        })()}
+                        {t.fechaVencimiento &&
+                          (() => {
+                            const hoy = new Date();
+                            hoy.setHours(0, 0, 0, 0);
+                            const vencimiento = new Date(t.fechaVencimiento);
+                            vencimiento.setHours(0, 0, 0, 0);
+                            const diffDias = Math.ceil(
+                              (vencimiento.getTime() - hoy.getTime()) /
+                                (1000 * 60 * 60 * 24)
+                            );
+                            const esVencida = diffDias < 0;
+                            const esHoy = diffDias === 0;
+                            const esManana = diffDias === 1;
+                            const esProxima = diffDias > 1 && diffDias <= 3;
+
+                            return (
+                              <span
+                                className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 shadow-sm ${
+                                  esVencida
+                                    ? "bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse"
+                                    : esHoy
+                                    ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white"
+                                    : esManana
+                                    ? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white"
+                                    : esProxima
+                                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+                                    : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                                }`}
+                              >
+                                <FiCalendar size={10} />
+                                {esVencida
+                                  ? "¡Vencida!"
+                                  : esHoy
+                                  ? "Hoy"
+                                  : esManana
+                                  ? "Mañana"
+                                  : `${diffDias}d`}
+                              </span>
+                            );
+                          })()}
                       </div>
 
                       <div className="flex justify-between items-center mt-2">

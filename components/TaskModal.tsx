@@ -1,7 +1,30 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { FiX, FiTrash2, FiSave, FiClock, FiAlignLeft, FiTag, FiMonitor, FiCode, FiWifi, FiFileText, FiTool, FiMessageSquare, FiSend, FiAlertCircle, FiCalendar } from "react-icons/fi";
-import { Tarea, TaskStatus, TaskCategory, TaskPriority, CATEGORIES, PRIORITIES } from "../types/task";
+import {
+  FiX,
+  FiTrash2,
+  FiSave,
+  FiClock,
+  FiAlignLeft,
+  FiTag,
+  FiMonitor,
+  FiCode,
+  FiWifi,
+  FiFileText,
+  FiTool,
+  FiMessageSquare,
+  FiSend,
+  FiAlertCircle,
+  FiCalendar,
+} from "react-icons/fi";
+import {
+  Tarea,
+  TaskStatus,
+  TaskCategory,
+  TaskPriority,
+  CATEGORIES,
+  PRIORITIES,
+} from "../types/task";
 import { Comentario } from "../types/comment";
 import { apiFetch } from "../lib/api";
 
@@ -23,11 +46,17 @@ export const TaskModal = ({
   const [titulo, setTitulo] = useState(task.titulo);
   const [descripcion, setDescripcion] = useState(task.descripcion || "");
   const [estado, setEstado] = useState<TaskStatus>(task.estado);
-  const [categoria, setCategoria] = useState<TaskCategory>(task.categoria || "Hardware");
-  const [prioridad, setPrioridad] = useState<TaskPriority>(task.prioridad || "Media");
-  const [fechaVencimiento, setFechaVencimiento] = useState(task.fechaVencimiento || "");
+  const [categoria, setCategoria] = useState<TaskCategory>(
+    task.categoria || "Hardware"
+  );
+  const [prioridad, setPrioridad] = useState<TaskPriority>(
+    task.prioridad || "Media"
+  );
+  const [fechaVencimiento, setFechaVencimiento] = useState(
+    task.fechaVencimiento || ""
+  );
   const [loading, setLoading] = useState(false);
-  
+
   // Comments State
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
   const [nuevoComentario, setNuevoComentario] = useState("");
@@ -42,22 +71,22 @@ export const TaskModal = ({
     setPrioridad(task.prioridad || "Media");
     setFechaVencimiento(task.fechaVencimiento || "");
     if (task.id) {
-        fetchComentarios(task.id);
+      fetchComentarios(task.id);
     }
   }, [task]);
 
   const fetchComentarios = async (taskId: number) => {
     setLoadingComentarios(true);
     try {
-        const resp = await apiFetch(`/tareas/${taskId}/comentarios`);
-        if (resp.ok) {
-            const data = await resp.json();
-            setComentarios(data);
-        }
+      const resp = await apiFetch(`/tareas/${taskId}/comentarios`);
+      if (resp.ok) {
+        const data = await resp.json();
+        setComentarios(data);
+      }
     } catch (error) {
-        console.error("Error fetching comments", error);
+      console.error("Error fetching comments", error);
     } finally {
-        setLoadingComentarios(false);
+      setLoadingComentarios(false);
     }
   };
 
@@ -65,29 +94,29 @@ export const TaskModal = ({
     if (!nuevoComentario.trim()) return;
 
     try {
-        const resp = await apiFetch(`/tareas/${task.id}/comentarios`, {
-            method: "POST",
-            body: JSON.stringify({ contenido: nuevoComentario })
-        });
+      const resp = await apiFetch(`/tareas/${task.id}/comentarios`, {
+        method: "POST",
+        body: JSON.stringify({ contenido: nuevoComentario }),
+      });
 
-        if (resp.ok) {
-            setNuevoComentario("");
-            fetchComentarios(task.id!);
-        }
+      if (resp.ok) {
+        setNuevoComentario("");
+        fetchComentarios(task.id!);
+      }
     } catch (error) {
-        console.error("Error posting comment", error);
+      console.error("Error posting comment", error);
     }
   };
 
   const handleSave = async () => {
     setLoading(true);
-    await onSave(task.id!, { 
-      titulo, 
-      descripcion, 
-      estado, 
+    await onSave(task.id!, {
+      titulo,
+      descripcion,
+      estado,
       categoria,
       prioridad,
-      fechaVencimiento: fechaVencimiento || undefined
+      fechaVencimiento: fechaVencimiento || undefined,
     });
     setLoading(false);
     onClose();
@@ -186,8 +215,12 @@ export const TaskModal = ({
                   className="w-full bg-gray-50 dark:bg-gray-800 p-4 pl-10 rounded-lg text-sm font-bold outline-none cursor-pointer text-black dark:text-white appearance-none border-2 border-transparent focus:border-black dark:focus:border-white transition-all hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   {Object.entries(CATEGORIES).map(([key, config]) => (
-                    <option key={key} value={key} className="text-black bg-white dark:bg-gray-800">
-                       {config.label}
+                    <option
+                      key={key}
+                      value={key}
+                      className="text-black bg-white dark:bg-gray-800"
+                    >
+                      {config.label}
                     </option>
                   ))}
                 </select>
@@ -224,8 +257,18 @@ export const TaskModal = ({
                 </label>
                 <input
                   type="date"
-                  value={fechaVencimiento ? new Date(fechaVencimiento).toISOString().split('T')[0] : ''}
-                  onChange={(e) => setFechaVencimiento(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                  value={
+                    fechaVencimiento
+                      ? new Date(fechaVencimiento).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setFechaVencimiento(
+                      e.target.value
+                        ? new Date(e.target.value).toISOString()
+                        : ""
+                    )
+                  }
                   className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-sm font-bold outline-none text-black dark:text-white border-2 border-transparent focus:border-black dark:focus:border-white transition-all"
                 />
               </div>
@@ -247,49 +290,52 @@ export const TaskModal = ({
 
           {/* Activity Log (Bitácora) */}
           <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-             <label className="flex items-center gap-2 text-xs font-black uppercase text-gray-300 dark:text-gray-600 tracking-widest ml-1">
+            <label className="flex items-center gap-2 text-xs font-black uppercase text-gray-300 dark:text-gray-600 tracking-widest ml-1">
               <FiMessageSquare /> Bitácora de Actividad
             </label>
-            
+
             <div className="max-h-[300px] overflow-y-auto space-y-3 custom-scrollbar pr-2">
-                {comentarios.length === 0 ? (
-                    <p className="text-sm text-gray-400 italic">No hay actividad registrada aún.</p>
-                ) : (
-                    comentarios.map((c) => (
-                        <div key={c.id} className="flex gap-3 text-sm">
-                            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0 text-xs font-black text-gray-500">
-                                IT
-                            </div>
-                            <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg rounded-tl-none">
-                                <p className="text-black dark:text-gray-200 font-medium">{c.contenido}</p>
-                                <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wide">
-                                    {new Date(c.fechaCreacion).toLocaleString()}
-                                </p>
-                            </div>
-                        </div>
-                    ))
-                )}
+              {comentarios.length === 0 ? (
+                <p className="text-sm text-gray-400 italic">
+                  No hay actividad registrada aún.
+                </p>
+              ) : (
+                comentarios.map((c) => (
+                  <div key={c.id} className="flex gap-3 text-sm">
+                    <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0 text-xs font-black text-gray-500">
+                      IT
+                    </div>
+                    <div className="flex-1 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg rounded-tl-none">
+                      <p className="text-black dark:text-gray-200 font-medium">
+                        {c.contenido}
+                      </p>
+                      <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wide">
+                        {new Date(c.fechaCreacion).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
             <div className="flex gap-2">
-                <input 
-                    type="text" 
-                    value={nuevoComentario}
-                    onChange={(e) => setNuevoComentario(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handlePostComentario()}
-                    placeholder="Escribe una actualización..."
-                    className="flex-1 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white rounded-lg px-4 py-3 text-sm font-bold outline-none transition-all"
-                />
-                <button 
-                    onClick={handlePostComentario}
-                    disabled={!nuevoComentario.trim()}
-                    className="bg-black dark:bg-white text-white dark:text-black p-3 rounded-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
-                >
-                    <FiSend />
-                </button>
+              <input
+                type="text"
+                value={nuevoComentario}
+                onChange={(e) => setNuevoComentario(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handlePostComentario()}
+                placeholder="Escribe una actualización..."
+                className="flex-1 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white rounded-lg px-4 py-3 text-sm font-bold outline-none transition-all"
+              />
+              <button
+                onClick={handlePostComentario}
+                disabled={!nuevoComentario.trim()}
+                className="bg-black dark:bg-white text-white dark:text-black p-3 rounded-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
+              >
+                <FiSend />
+              </button>
             </div>
           </div>
-
         </div>
 
         {/* Footer */}
