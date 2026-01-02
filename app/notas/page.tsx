@@ -229,6 +229,16 @@ export default function NotasPage() {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        setSelectedNota(nota);
+                        setIsEditing(true);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 dark:text-gray-600 hover:text-black dark:hover:text-white transition-all"
+                    >
+                      <FiEdit size={20} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
                         eliminarNota(nota.id);
                       }}
                       className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 dark:text-gray-600 hover:text-red-500 transition-all"
