@@ -193,7 +193,7 @@ export default function NovedadesPage() {
                         {getActivityIcon(actividad.tipo)}
                         {getActivityLabel(actividad.tipo)}
                       </span>
-                      {actividad.referenciaInfo && (
+                      {actividad.referenciaInfo && actividad.tipo !== "ComentarioAgregado" && (
                         <span className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-1 rounded">
                           {actividad.referenciaInfo}
                         </span>
@@ -207,10 +207,7 @@ export default function NovedadesPage() {
                   {actividad.tipo === "ComentarioAgregado" ? (
                     <div className="space-y-2">
                       <p className="text-gray-600 dark:text-gray-400 font-medium text-sm">
-                        Comentario en:{" "}
-                        <span className="text-gray-900 dark:text-gray-100 font-bold">
-                          {actividad.referenciaInfo}
-                        </span>
+                        Comentario en: <span className="text-gray-900 dark:text-gray-100 font-bold">{actividad.referenciaInfo}</span>
                       </p>
                       <div className="bg-gray-50 dark:bg-gray-800 border-l-4 border-purple-500 p-3 rounded">
                         <p className="text-gray-700 dark:text-gray-300 font-medium text-sm italic">
