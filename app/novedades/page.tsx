@@ -59,25 +59,22 @@ export default function NovedadesPage() {
     }
   };
 
-  const deleteAllActividades = async () => {
-    if (
-      !confirm(
-        "¿Estás seguro de que deseas eliminar TODAS las actividades? Esta acción no se puede deshacer."
-      )
-    ) {
+  const deleteActividad = async (id: number) => {
+    if (!confirm("¿Estás seguro de que deseas eliminar esta actividad?")) {
       return;
     }
 
     try {
-      // Eliminar todas las actividades una por una
-      const promises = actividades.map((act) =>
-        apiFetch(`/actividades/${act.id}`, { method: "DELETE" })
-      );
-      await Promise.all(promises);
-      setActividades([]);
+      const resp = await apiFetch(`/actividades/${id}`, { method: "DELETE" });
+      if (resp.ok) {
+        // Actualizar el estado eliminando la actividad
+        setActividades(actividades.filter((a) => a.id !== id));
+      } else {
+        alert("Error al eliminar la actividad");
+      }
     } catch (error) {
-      console.error("Error deleting actividades", error);
-      alert("Error al eliminar las actividades");
+      console.error("Error deleting actividad", error);
+      alert("Error al eliminar la actividad");
     }
   };
 
@@ -202,18 +199,9 @@ export default function NovedadesPage() {
         >
           <FiMenu size={18} />
         </button>
-        <h1 className="text-xl sm:text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase flex items-center gap-3 flex-1">
+        <h1 className="text-xl sm:text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase flex items-center gap-3">
           NOVEDADES IT
         </h1>
-        {actividades.length > 0 && (
-          <button
-            onClick={deleteAllActividades}
-            className="bg-red-500 hover:bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 flex-shrink-0"
-          >
-            <FiTrash2 size={16} />
-            <span className="hidden sm:inline">Borrar Todas</span>
-          </button>
-        )}
       </header>
 
       {/* Feed */}
@@ -269,9 +257,18 @@ export default function NovedadesPage() {
                               {getActivityIcon(actividad.tipo)}
                               {getActivityLabel(actividad.tipo)}
                             </span>
-                            <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">
-                              {formatDate(actividad.fechaCreacion)}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">
+                                {formatDate(actividad.fechaCreacion)}
+                              </span>
+                              <button
+                                onClick={() => deleteActividad(actividad.id)}
+                                className="p-1.5 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90 group/delete"
+                                title="Eliminar actividad"
+                              >
+                                <FiTrash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 group-hover/delete:text-red-600 dark:group-hover/delete:text-red-400 transition-colors" />
+                              </button>
+                            </div>
                           </div>
 
                           {/* Content */}
