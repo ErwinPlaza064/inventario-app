@@ -169,14 +169,16 @@ export default function TareasPage() {
     );
 
     try {
+      const tarea = tareas.find((t) => t.id === id);
+      if (!tarea) return;
+
       // Backend espera número: Pendiente=0, EnProceso=1, Completada=2
       const estadoEnum = ["Pendiente", "EnProceso", "Completada"].indexOf(
         nuevoEstado
       );
-      const tarea = tareas.find((t) => t.id === id);
 
       // Convertir categoría a número también
-      const categoriaEnum = tarea?.categoria
+      const categoriaEnum = tarea.categoria
         ? [
             "Hardware",
             "Software",
@@ -186,18 +188,29 @@ export default function TareasPage() {
           ].indexOf(tarea.categoria)
         : 0;
 
+      // Convertir prioridad a número
+      const prioridadEnum = tarea.prioridad
+        ? ["Baja", "Media", "Alta", "Urgente"].indexOf(tarea.prioridad)
+        : 1;
+
       const resp = await apiFetch(`${ENDPOINTS.tareas}/${id}`, {
         method: "PUT",
         body: JSON.stringify({
-          ...tarea,
+          id: tarea.id,
+          titulo: tarea.titulo,
+          descripcion: tarea.descripcion || "",
           estado: estadoEnum,
           categoria: categoriaEnum,
-          id,
+          prioridad: prioridadEnum,
+          fechaVencimiento: tarea.fechaVencimiento || null,
+          fechaCreacion: tarea.fechaCreacion,
+          usuarioId: tarea.usuarioId || 0,
         }),
       });
 
       if (!resp.ok) {
         setTareas(previousTareas); // Revertir si falla
+        console.error("Error al actualizar estado");
       }
     } catch (err) {
       setTareas(previousTareas);
