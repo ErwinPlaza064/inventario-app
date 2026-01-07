@@ -113,9 +113,9 @@ export default function TareasPage() {
       setError(true);
       return;
     }
-    
+
     if (isSubmitting) return; // Prevenir múltiples clics
-    
+
     setError(false);
     setIsSubmitting(true);
 
@@ -330,7 +330,7 @@ export default function TareasPage() {
                 if (error) setError(false);
               }}
               placeholder={error ? "¡Escribe algo!" : "Nueva Tarea..."}
-              onKeyPress={(e) => e.key === "Enter" && agregarTarea()}
+              onKeyPress={(e) => e.key === "Enter" && !isSubmitting && agregarTarea()}
               className={`bg-gray-50 dark:bg-gray-900 border-2 rounded-lg px-3 py-2 text-black dark:text-white font-bold outline-none flex-1 lg:w-64 transition-all text-sm ${
                 error
                   ? "border-red-500 placeholder:text-red-400 animate-shake"

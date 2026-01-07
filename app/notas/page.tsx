@@ -85,9 +85,9 @@ export default function NotasPage() {
       setError(true);
       return;
     }
-    
+
     if (isSubmitting) return; // Prevenir múltiples clics
-    
+
     setError(false);
     setIsSubmitting(true);
 
