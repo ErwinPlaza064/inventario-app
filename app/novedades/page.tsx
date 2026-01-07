@@ -150,7 +150,11 @@ export default function NovedadesPage() {
 
     actividades.forEach((act) => {
       const actDate = new Date(act.fechaCreacion);
-      const d = new Date(actDate.getFullYear(), actDate.getMonth(), actDate.getDate());
+      const d = new Date(
+        actDate.getFullYear(),
+        actDate.getMonth(),
+        actDate.getDate()
+      );
 
       if (d.getTime() === today.getTime()) {
         groups["Hoy"].push(act);
@@ -167,22 +171,22 @@ export default function NovedadesPage() {
   const grouped = groupActividades();
 
   return (
-    <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in relative z-10">
+    <div className="p-3 sm:p-4 lg:p-8 max-w-[1600px] mx-auto animate-fade-in relative z-10">
       {/* Header */}
-      <header className="flex items-center gap-3 mb-8 lg:mb-12">
+      <header className="flex items-center gap-2 sm:gap-3 mb-6 lg:mb-12">
         <button
           onClick={openSidebar}
-          className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg active:scale-90 transition-transform"
+          className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg active:scale-90 transition-transform flex-shrink-0"
         >
-          <FiMenu size={20} />
+          <FiMenu size={18} />
         </button>
-        <h1 className="text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase flex items-center gap-3">
+        <h1 className="text-xl sm:text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase flex items-center gap-3">
           NOVEDADES IT
         </h1>
       </header>
 
       {/* Feed */}
-      <div className="max-w-6xl mx-auto space-y-12">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8 lg:space-y-12">
         {loading ? (
           <div className="text-center py-20">
             <div className="w-8 h-8 border-4 border-gray-200 border-t-black dark:border-gray-800 dark:border-t-white rounded-full animate-spin mx-auto" />
@@ -205,15 +209,15 @@ export default function NovedadesPage() {
             if (items.length === 0) return null;
 
             return (
-              <section key={title} className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <h2 className="text-sm font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.3em] whitespace-nowrap">
+              <section key={title} className="space-y-4 sm:space-y-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <h2 className="text-xs sm:text-sm font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.2em] sm:tracking-[0.3em] whitespace-nowrap">
                     {title}
                   </h2>
                   <div className="h-px w-full bg-gray-100 dark:border-gray-800" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {items.map((actividad, idx) => {
                     const isComment = actividad.tipo === "ComentarioAgregado";
 
@@ -223,11 +227,11 @@ export default function NovedadesPage() {
                         className="animate-slide-up"
                         style={{ animationDelay: `${idx * 50}ms` }}
                       >
-                        <div className="bg-white dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-800 rounded-[24px] p-6 hover:border-black dark:hover:border-white transition-all shadow-sm group">
+                        <div className="bg-white dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-800 rounded-2xl sm:rounded-[24px] p-4 sm:p-6 hover:border-black dark:hover:border-white transition-all shadow-sm group">
                           {/* Header */}
-                          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-50 dark:border-gray-800">
+                          <div className="flex items-center justify-between mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-50 dark:border-gray-800">
                             <span
-                              className={`text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wider inline-flex items-center gap-2 ${getActivityColor(
+                              className={`text-[9px] sm:text-[10px] font-black px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg uppercase tracking-wider inline-flex items-center gap-1 sm:gap-2 ${getActivityColor(
                                 actividad.tipo
                               )}`}
                             >
@@ -242,19 +246,19 @@ export default function NovedadesPage() {
                           {/* Content */}
                           <div className="space-y-3">
                             {actividad.referenciaInfo && (
-                              <h3 className="text-lg font-black text-black dark:text-white uppercase tracking-tight leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                              <h3 className="text-base sm:text-lg font-black text-black dark:text-white uppercase tracking-tight leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors break-words">
                                 {actividad.referenciaInfo}
                               </h3>
                             )}
 
                             {isComment ? (
-                              <div className="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded-r-xl">
-                                <p className="text-gray-600 dark:text-gray-300 font-bold text-sm leading-relaxed">
+                              <div className="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-3 sm:p-4 rounded-r-xl">
+                                <p className="text-gray-600 dark:text-gray-300 font-bold text-xs sm:text-sm leading-relaxed break-words">
                                   {actividad.descripcion}
                                 </p>
                               </div>
                             ) : (
-                              <p className="text-gray-500 dark:text-gray-400 font-bold text-sm leading-relaxed">
+                              <p className="text-gray-500 dark:text-gray-400 font-bold text-xs sm:text-sm leading-relaxed break-words">
                                 {actividad.descripcion}
                               </p>
                             )}
