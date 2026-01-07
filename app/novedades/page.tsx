@@ -59,6 +59,24 @@ export default function NovedadesPage() {
     }
   };
 
+  const deleteAllActividades = async () => {
+    if (!confirm("¿Estás seguro de que deseas eliminar TODAS las actividades? Esta acción no se puede deshacer.")) {
+      return;
+    }
+
+    try {
+      // Eliminar todas las actividades una por una
+      const promises = actividades.map((act) =>
+        apiFetch(`/actividades/${act.id}`, { method: "DELETE" })
+      );
+      await Promise.all(promises);
+      setActividades([]);
+    } catch (error) {
+      console.error("Error deleting actividades", error);
+      alert("Error al eliminar las actividades");
+    }
+  };
+
   const getActivityIcon = (tipo: TipoActividad) => {
     switch (tipo) {
       case "TareaCreada":
@@ -180,9 +198,18 @@ export default function NovedadesPage() {
         >
           <FiMenu size={18} />
         </button>
-        <h1 className="text-xl sm:text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase flex items-center gap-3">
+        <h1 className="text-xl sm:text-2xl lg:text-4xl font-black text-black dark:text-white tracking-tight uppercase flex items-center gap-3 flex-1">
           NOVEDADES IT
         </h1>
+        {actividades.length > 0 && (
+          <button
+            onClick={deleteAllActividades}
+            className="bg-red-500 hover:bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 flex-shrink-0"
+          >
+            <FiTrash2 size={16} />
+            <span className="hidden sm:inline">Borrar Todas</span>
+          </button>
+        )}
       </header>
 
       {/* Feed */}

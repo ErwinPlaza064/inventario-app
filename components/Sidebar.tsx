@@ -20,7 +20,6 @@ const menuItems = [
   { name: "Novedades", icon: FiActivity, path: "/novedades" },
   { name: "Tareas IT", icon: FiCheckSquare, path: "/tareas" },
   { name: "Notas Rápidas", icon: FiFileText, path: "/notas" },
-  { name: "Bóveda de Accesos", icon: FiLock, path: "/boveda" },
 ];
 
 interface SidebarProps {
