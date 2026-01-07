@@ -41,6 +41,7 @@ export default function TareasPage() {
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState<Tarea | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Filtros y búsqueda
   const [searchTerm, setSearchTerm] = useState("");
@@ -112,7 +113,11 @@ export default function TareasPage() {
       setError(true);
       return;
     }
+    
+    if (isSubmitting) return; // Prevenir múltiples clics
+    
     setError(false);
+    setIsSubmitting(true);
 
     try {
       // Auto-detectar categoría basada en el título
@@ -140,6 +145,8 @@ export default function TareasPage() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -332,9 +339,14 @@ export default function TareasPage() {
             />
             <button
               onClick={agregarTarea}
-              className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg hover:scale-105 active:scale-95 transition-all shrink-0"
+              disabled={isSubmitting}
+              className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-lg hover:scale-105 active:scale-95 transition-all shrink-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              <FiPlus size={20} />
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <FiPlus size={20} />
+              )}
             </button>
           </div>
         </div>

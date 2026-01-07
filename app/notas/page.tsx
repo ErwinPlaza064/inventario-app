@@ -50,6 +50,7 @@ export default function NotasPage() {
   const [selectedNota, setSelectedNota] = useState<Nota | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [nuevaNota, setNuevaNota] = useState({
     titulo: "",
     contenido: "",
@@ -84,7 +85,11 @@ export default function NotasPage() {
       setError(true);
       return;
     }
+    
+    if (isSubmitting) return; // Prevenir múltiples clics
+    
     setError(false);
+    setIsSubmitting(true);
 
     // ... (existing code)
     try {
@@ -104,6 +109,8 @@ export default function NotasPage() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -387,9 +394,17 @@ export default function NotasPage() {
                   </button>
                   <button
                     onClick={guardarNota}
-                    className="flex-1 bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-lg hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-black dark:bg-white text-white dark:text-black font-black py-4 rounded-lg hover:scale-105 active:scale-95 transition-all shadow-xl dark:shadow-none shadow-gray-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
-                    GUARDAR NOTA
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin" />
+                        <span>GUARDANDO...</span>
+                      </>
+                    ) : (
+                      "GUARDAR NOTA"
+                    )}
                   </button>
                 </div>
               </div>
