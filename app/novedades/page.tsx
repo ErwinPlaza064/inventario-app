@@ -60,7 +60,11 @@ export default function NovedadesPage() {
   };
 
   const deleteAllActividades = async () => {
-    if (!confirm("¿Estás seguro de que deseas eliminar TODAS las actividades? Esta acción no se puede deshacer.")) {
+    if (
+      !confirm(
+        "¿Estás seguro de que deseas eliminar TODAS las actividades? Esta acción no se puede deshacer."
+      )
+    ) {
       return;
     }
 
