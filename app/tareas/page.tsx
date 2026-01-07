@@ -204,7 +204,6 @@ export default function TareasPage() {
           prioridad: prioridadEnum,
           fechaVencimiento: tarea.fechaVencimiento || null,
           fechaCreacion: tarea.fechaCreacion,
-          usuarioId: tarea.usuarioId || 0,
         }),
       });
 
