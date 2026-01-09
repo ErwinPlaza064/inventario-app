@@ -52,9 +52,6 @@ export const TaskModal = ({
   const [prioridad, setPrioridad] = useState<TaskPriority>(
     task.prioridad || "Media"
   );
-  const [fechaVencimiento, setFechaVencimiento] = useState(
-    task.fechaVencimiento || ""
-  );
   const [loading, setLoading] = useState(false);
 
   // Comments State
@@ -69,7 +66,6 @@ export const TaskModal = ({
     setEstado(task.estado);
     setCategoria(task.categoria || "Hardware");
     setPrioridad(task.prioridad || "Media");
-    setFechaVencimiento(task.fechaVencimiento || "");
     if (task.id) {
       fetchComentarios(task.id);
     }
@@ -116,7 +112,6 @@ export const TaskModal = ({
       estado,
       categoria,
       prioridad,
-      fechaVencimiento: fechaVencimiento || undefined,
     });
     setLoading(false);
     onClose();
@@ -230,48 +225,22 @@ export const TaskModal = ({
               </div>
             </div>
 
-            {/* Priority and Due Date */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Priority */}
-              <div className="space-y-3">
-                <label className="flex items-center gap-2 text-xs font-black uppercase text-gray-300 dark:text-gray-600 tracking-widest ml-1">
-                  <FiAlertCircle /> Prioridad
-                </label>
-                <select
-                  value={prioridad}
-                  onChange={(e) => setPrioridad(e.target.value as TaskPriority)}
-                  className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-sm font-bold outline-none cursor-pointer text-black dark:text-white appearance-none border-2 border-transparent focus:border-black dark:focus:border-white transition-all"
-                >
-                  {Object.entries(PRIORITIES).map(([key, config]) => (
-                    <option key={key} value={key}>
-                      {config.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Due Date */}
-              <div className="space-y-3">
-                <label className="flex items-center gap-2 text-xs font-black uppercase text-gray-300 dark:text-gray-600 tracking-widest ml-1">
-                  <FiCalendar /> Vencimiento
-                </label>
-                <input
-                  type="date"
-                  value={
-                    fechaVencimiento
-                      ? new Date(fechaVencimiento).toISOString().split("T")[0]
-                      : ""
-                  }
-                  onChange={(e) =>
-                    setFechaVencimiento(
-                      e.target.value
-                        ? new Date(e.target.value).toISOString()
-                        : ""
-                    )
-                  }
-                  className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-sm font-bold outline-none text-black dark:text-white border-2 border-transparent focus:border-black dark:focus:border-white transition-all"
-                />
-              </div>
+            {/* Priority */}
+            <div className="space-y-3">
+              <label className="flex items-center gap-2 text-xs font-black uppercase text-gray-300 dark:text-gray-600 tracking-widest ml-1">
+                <FiAlertCircle /> Prioridad
+              </label>
+              <select
+                value={prioridad}
+                onChange={(e) => setPrioridad(e.target.value as TaskPriority)}
+                className="w-full bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-sm font-bold outline-none cursor-pointer text-black dark:text-white appearance-none border-2 border-transparent focus:border-black dark:focus:border-white transition-all"
+              >
+                {Object.entries(PRIORITIES).map(([key, config]) => (
+                  <option key={key} value={key}>
+                    {config.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
