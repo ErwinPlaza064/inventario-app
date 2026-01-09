@@ -531,9 +531,8 @@ export default function TareasPage() {
                         </div>
                       )}
 
-                      {/* Prioridad y Fecha de vencimiento */}
+                      {/* Prioridad */}
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {/* Prioridad */}
                         {t.prioridad && (
                           <span
                             className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 ${
@@ -544,48 +543,6 @@ export default function TareasPage() {
                             {PRIORITIES[t.prioridad].label}
                           </span>
                         )}
-
-                        {/* Fecha de vencimiento */}
-                        {t.fechaVencimiento &&
-                          (() => {
-                            const hoy = new Date();
-                            hoy.setHours(0, 0, 0, 0);
-                            const vencimiento = new Date(t.fechaVencimiento);
-                            vencimiento.setHours(0, 0, 0, 0);
-                            const diffDias = Math.ceil(
-                              (vencimiento.getTime() - hoy.getTime()) /
-                                (1000 * 60 * 60 * 24)
-                            );
-                            const esVencida = diffDias < 0;
-                            const esHoy = diffDias === 0;
-                            const esManana = diffDias === 1;
-                            const esProxima = diffDias > 1 && diffDias <= 3;
-
-                            return (
-                              <span
-                                className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 shadow-sm ${
-                                  esVencida
-                                    ? "bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse"
-                                    : esHoy
-                                    ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white"
-                                    : esManana
-                                    ? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white"
-                                    : esProxima
-                                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
-                                    : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
-                                }`}
-                              >
-                                <FiCalendar size={10} />
-                                {esVencida
-                                  ? "¡Vencida!"
-                                  : esHoy
-                                  ? "Hoy"
-                                  : esManana
-                                  ? "Mañana"
-                                  : `${diffDias}d`}
-                              </span>
-                            );
-                          })()}
                       </div>
 
                       <div className="flex justify-between items-center mt-2">
